@@ -145,6 +145,15 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DataItem.h" />
+    <ClInclude Include="IActivationFunction.h" />
+    <ClInclude Include="IErrorFunction.h" />
+    <ClInclude Include="ILayer.h" />
+    <ClInclude Include="ILearningStrategey.h" />
+    <ClInclude Include="IMultilayerNeuralNetwork.h" />
+    <ClInclude Include="INeuralNetwork.h" />
+    <ClInclude Include="INeuron.h" />
+    <ClInclude Include="LearningAlgorithmConfig.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
