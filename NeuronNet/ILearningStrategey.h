@@ -4,6 +4,6 @@
 namespace neuralNet {
 	template<class T>
 	class ILearningStrategy {
-		virtual void train(Y network, (vector<DataItem<float>> data) = 0;
+		virtual void train(T network, (vector<DataItem<float>>* data) = 0;
 	};
 }
