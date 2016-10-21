@@ -3,7 +3,7 @@
 
 namespace neuralNet {
 	using std::vector;
-	template<class T>
+	template<typename T>
 	class DataItem {
 	private:
 		vector<T>* _input;
