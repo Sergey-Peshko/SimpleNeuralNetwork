@@ -4,5 +4,6 @@ namespace neuralNet{
 	public:
 		virtual float calculate(float S) = 0;
 		virtual float calculateFirstDerivative(float S) = 0;
+		virtual IActivationFunction* clone() = 0;
 	};
 }

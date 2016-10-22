@@ -3,6 +3,9 @@
 
 #include "stdafx.h"
 
+#include"NeuralNetworks\MultilayerNeuralNetwork\MLP.h"
+#include"LearningStrategeys\BackpropagationLearningAlgorithm.h";
+
 
 int main()
 {

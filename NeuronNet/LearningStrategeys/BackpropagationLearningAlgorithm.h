@@ -125,7 +125,7 @@ namespace neuralNet {
 									data[inBatchIndex].Output(),
 									realOutput, j) *
 								network->Layers()[network->Layers().size() - 1]->Neurons()[j]->ActivationFunction()->
-								calculateFirstDerivative(network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastSum());
+								calculateFirstDerivative(network->Layers()[network->Layers().size() - 1]->Neurons()[j]->getLastSum());
 
 							nablaThresholds[network->Layers().size() - 1][j] += _config.getLearningRate() *
 								network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError;
@@ -136,7 +136,7 @@ namespace neuralNet {
 									_config.getLearningRate()*
 									network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError() *
 									(network->Layers().size() > 1 ?
-										network->Layers()[network->Layers().size() - 1 - 1]->Neurons()[i]->LastState() :
+										network->Layers()[network->Layers().size() - 1 - 1]->Neurons()[i]->getLastState() :
 										data[inBatchIndex].Input[i]);
 							}
 						}
@@ -158,7 +158,7 @@ namespace neuralNet {
 								network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError() *=
 									network->Layers()[hiddenLayerIndex]->Neurons()[j]->ActivationFunction()->
 									calculateFirstDerivative(
-										network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastSum()
+										network->Layers()[hiddenLayerIndex]->Neurons()[j]->getLastSum()
 									);
 
 								nablaThresholds[hiddenLayerIndex][j] += _config.getLearningRate()*
@@ -169,7 +169,7 @@ namespace neuralNet {
 									nablaWeights[hiddenLayerIndex][j][i] += _config.getLearningRate() *
 										network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError() *
 										(hiddenLayerIndex > 0 ?
-											network->Layers()[hiddenLayerIndex - 1]->Neurons()[i]->LastState() :
+											network->Layers()[hiddenLayerIndex - 1]->Neurons()[i]->getLastState() :
 											data[inBatchIndex].Input[i]);
 								}
 							}

@@ -84,6 +84,21 @@
     <ClInclude Include="LearningStrategeys\LearningAlgorithmConfig.h">
       <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
+    <ClInclude Include="Neurons\Neuron.h">
+      <Filter>Заголовочные файлы\Neurons</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\Layer.h">
+      <Filter>Заголовочные файлы\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetworks\MultilayerNeuralNetwork\MLP.h">
+      <Filter>Заголовочные файлы\NeuralNetworks\MultilayerNeuralNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationFunctions\Relu.h">
+      <Filter>Заголовочные файлы\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationFunctions\Sigmoid.h">
+      <Filter>Заголовочные файлы\ActivationFunctions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
