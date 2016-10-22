@@ -16,3 +16,10 @@
 #include<vector>
 #include<fstream>
 #include<list>
+#include<cmath>
+#include<ctime>
+#include<random>
+#include<sstream>
+
+using std::vector;
+using std::ostream;

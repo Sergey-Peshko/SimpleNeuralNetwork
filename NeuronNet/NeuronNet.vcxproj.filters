@@ -13,6 +13,30 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Заголовочные файлы\ActivationFunctions">
+      <UniqueIdentifier>{058f0699-9623-4968-bc1c-ee30f14f2f2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\NeuralNetworks">
+      <UniqueIdentifier>{bd440fbf-e7cf-42f9-b988-3f7e7fff5721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Data">
+      <UniqueIdentifier>{ecf6df1d-4363-4809-9ebe-407d3e98b963}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Layers">
+      <UniqueIdentifier>{96926024-8943-493d-b932-3022f0be8d5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\Neurons">
+      <UniqueIdentifier>{64a6b3ca-4f96-489b-918d-a1ffdd729c97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\LearningStrategeys">
+      <UniqueIdentifier>{7c2c684c-b2f6-4883-b123-2c66b47a4428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\ErrorFunctions">
+      <UniqueIdentifier>{eea8e21f-fd60-42f1-9154-c4355fd2288b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Заголовочные файлы\NeuralNetworks\MultilayerNeuralNetwork">
+      <UniqueIdentifier>{03bd2f88-62c8-4e94-bdec-a73b53f036c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -24,38 +48,41 @@
     <ClInclude Include="targetver.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="IErrorFunction.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="ActivationFunctions\IActivationFunction.h">
+      <Filter>Заголовочные файлы\ActivationFunctions</Filter>
     </ClInclude>
-    <ClInclude Include="IActivationFunction.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="NeuralNetworks\INeuralNetwork.h">
+      <Filter>Заголовочные файлы\NeuralNetworks</Filter>
     </ClInclude>
-    <ClInclude Include="INeuron.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h">
+      <Filter>Заголовочные файлы\NeuralNetworks\MultilayerNeuralNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="ILayer.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="Data\DataItem.h">
+      <Filter>Заголовочные файлы\Data</Filter>
     </ClInclude>
-    <ClInclude Include="INeuralNetwork.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="Layers\ILayer.h">
+      <Filter>Заголовочные файлы\Layers</Filter>
     </ClInclude>
-    <ClInclude Include="IMultilayerNeuralNetwork.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="Neurons\INeuron.h">
+      <Filter>Заголовочные файлы\Neurons</Filter>
     </ClInclude>
-    <ClInclude Include="ILearningStrategey.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithm.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
-    <ClInclude Include="DataItem.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="LearningStrategeys\ILearningStrategey.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
-    <ClInclude Include="LearningAlgorithmConfig.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="LearningStrategeys\RestrictedBoltzmannMachines.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
-    <ClInclude Include="BackpropagationLearningAlgorithm.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="ErrorFunctions\HalfSquaredEuclidianDistance.h">
+      <Filter>Заголовочные файлы\ErrorFunctions</Filter>
     </ClInclude>
-    <ClInclude Include="RestrictedBoltzmannMachines.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="ErrorFunctions\IErrorFunction.h">
+      <Filter>Заголовочные файлы\ErrorFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="LearningStrategeys\LearningAlgorithmConfig.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
