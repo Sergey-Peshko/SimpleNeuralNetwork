@@ -21,7 +21,7 @@ namespace neuralNet {
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm() {
 		std::ostringstream ss;
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logs(data" << (int)seconds << ").txt" << std::endl;
+		ss << "logs(data" << (int)seconds << ").log" << std::endl;
 		std::string lol = ss.str();
 		std::string way(lol.begin(), lol.end() - 1);
 		_logger = std::ofstream(way);
@@ -29,7 +29,7 @@ namespace neuralNet {
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(LearningAlgorithmConfig config) {
 		std::ostringstream ss;
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logs(data" << (int)seconds << ").txt" << std::endl;
+		ss << "logs(data" << (int)seconds << ").log" << std::endl;
 		std::string lol = ss.str();
 		std::string way(lol.begin(), lol.end() - 1);
 		_logger = std::ofstream(way);
@@ -197,7 +197,7 @@ namespace neuralNet {
 				//update weights and bias
 				for (int layerIndex = 0; layerIndex < network->Layers().size(); layerIndex++)
 				{
-					_logger << "layer: " << layerIndex << std::endl;
+					//_logger << "layer: " << layerIndex << std::endl;
 					for (int neuronIndex = 0; 
 						neuronIndex < network->Layers()[layerIndex]->Neurons().size(); 
 						neuronIndex++)
@@ -207,7 +207,7 @@ namespace neuralNet {
 							network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold()*
 							(1 - _config.getRegularizationFactor()) +	//применяем регуляризацию
 							_config.getLearningRate() * nablaThresholds[layerIndex][neuronIndex];
-						_logger << "T: "<< network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold() << "\t\t";
+						//_logger << "T: "<< network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold() << "\t\t";
 						for (int weightIndex = 0; 
 							weightIndex < network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights().size();
 							weightIndex++)
@@ -216,9 +216,9 @@ namespace neuralNet {
 								network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex]*
 								(1 - _config.getRegularizationFactor()) - //применяем регуляризацию
 								_config.getLearningRate() * nablaWeights[layerIndex][neuronIndex][weightIndex];
-							_logger << network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] << "\t\t";
+							//_logger << network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] << "\t\t";
 						}
-						_logger << std::endl;
+						//_logger << std::endl;
 					}
 				}
 

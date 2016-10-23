@@ -20,7 +20,7 @@ void print(vector<float> v) {
 
 int main()
 {
-	MLP mlp(2, {2,1},new Sigmoid(),new Sigmoid(), new BackpropagationLearningAlgorithm());
+	MLP mlp(2, {2,1},new Relu(),new Sigmoid(), new BackpropagationLearningAlgorithm());
 	vector<DataItem<float>> data;
 	data.push_back(DataItem<float>({ 0,0 }, { 0 }));
 	data.push_back(DataItem<float>({ 0,1 }, { 1 }));
