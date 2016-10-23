@@ -16,9 +16,9 @@ namespace neuralNet {
 	public:
 		LearningAlgorithmConfig() {
 			learningRate = 0.1;
-			batchSize = -1;
-			regularizationFactor = 0.5;
-			maxEpoches = 1000;
+			batchSize = 1;
+			regularizationFactor = 0.01;
+			maxEpoches = 10000;
 			minError = 0.00001;
 			minErrorChange = 0.000'000'000'001;
 			errorFunction = new HalfSquaredEuclidianDistance<float>();

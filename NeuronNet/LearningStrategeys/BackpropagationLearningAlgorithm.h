@@ -10,45 +10,62 @@ namespace neuralNet {
 		LearningAlgorithmConfig _config;
 		std::ofstream _logger;
 
-		void shuffle(vector<int>& arr)
-		{
-			std::mt19937 _generator(clock());
-			std::uniform_real_distribution<double> _urd(0, 1);
-			std::uniform_int_distribution<int> _uid(0, arr.size() - 1);
-
-			for (int i = 0; i < arr.size() - 1; i++)
-			{
-				if (_urd(_generator) >= 0.3)
-				{
-					int newIndex = _uid(_generator);
-					int tmp = arr[i];
-					arr[i] = arr[newIndex];
-					arr[newIndex] = tmp;
-				}
-			}
-		}
+		void shuffle(vector<int>& arr);
 	public:
 		BackpropagationLearningAlgorithm();
 		BackpropagationLearningAlgorithm(LearningAlgorithmConfig config);
+		~BackpropagationLearningAlgorithm();
 		// ”наследовано через ILearningStrategy
 		virtual void train(IMultilayerNeuralNetwork* network, vector<DataItem<float>>& data) override;
 	};
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm() {
 		std::ostringstream ss;
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logs(data:" << seconds << ").txt" << std::endl;
-		_logger = std::ofstream(ss.str());
+		ss << "logs(data" << (int)seconds << ").txt" << std::endl;
+		std::string lol = ss.str();
+		std::string way(lol.begin(), lol.end() - 1);
+		_logger = std::ofstream(way);
 	}
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(LearningAlgorithmConfig config) {
 		std::ostringstream ss;
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logs(data:" << seconds << ").txt" << std::endl;
-		_logger = std::ofstream(ss.str());
+		ss << "logs(data" << (int)seconds << ").txt" << std::endl;
+		std::string lol = ss.str();
+		std::string way(lol.begin(), lol.end() - 1);
+		_logger = std::ofstream(way);
 
 		_config = config;
 	}
+	BackpropagationLearningAlgorithm::~BackpropagationLearningAlgorithm() {
+		_logger.close();
+	}
+	void BackpropagationLearningAlgorithm::shuffle(vector<int>& arr)
+	{
+		std::mt19937 _generator(clock());
+		std::uniform_real_distribution<double> _urd(0, 1);
+		std::uniform_int_distribution<int> _uid(0, arr.size() - 1);
+
+		for (int i = 0; i < arr.size() - 1; i++)
+		{
+			if (_urd(_generator) >= 0.3)
+			{
+				int newIndex = _uid(_generator);
+				int tmp = arr[i];
+				arr[i] = arr[newIndex];
+				arr[newIndex] = tmp;
+			}
+		}
+	}
 	void neuralNet::BackpropagationLearningAlgorithm::train(IMultilayerNeuralNetwork* network, vector<DataItem<float>>& data)
 	{
+	//	network->Layers()[0]->Neurons()[0]->Weights()[0] = -0.5;
+	//	network->Layers()[0]->Neurons()[0]->Weights()[1] = 0.5;
+	//	network->Layers()[0]->Neurons()[1]->Weights()[0] = 0.5;
+	//	network->Layers()[0]->Neurons()[1]->Weights()[1] = -0.5;
+
+	//	network->Layers()[1]->Neurons()[0]->Weights()[0] = 1;
+	//	network->Layers()[1]->Neurons()[0]->Weights()[1] = 1;
+
 		if (_config.getBatchSize() < 1 || _config.getBatchSize() > data.size())
 		{
 			_config.setBatchSize(data.size());
@@ -60,16 +77,16 @@ namespace neuralNet {
 
 		//#region initialize accumulated error for batch, for weights and biases
 
-		float*** nablaWeights = new float**[network->Layers().size()];
-		float** nablaThresholds = new float*[network->Layers().size()];
+		vector<vector<vector<float>>> nablaWeights(network->Layers().size()) ;
+		vector<vector<float>> nablaThresholds(network->Layers().size());
 
 		for (int i = 0; i < network->Layers().size(); i++)
 		{
-			nablaWeights[i] = new float*[network->Layers()[i]->Neurons().size()];
-			nablaThresholds[i] = new float[network->Layers()[i]->Neurons().size()];
+			nablaWeights[i].resize(network->Layers()[i]->Neurons().size());
+			nablaThresholds[i].resize(network->Layers()[i]->Neurons().size());
 			for (int j = 0; j < network->Layers()[i]->Neurons().size(); j++)
 			{
-				nablaWeights[i][j] = new float[network->Layers()[i]->Neurons()[j]->Weights().size()];
+				nablaWeights[i][j].resize(network->Layers()[i]->Neurons()[j]->Weights().size());
 			}
 		}
 
@@ -88,7 +105,7 @@ namespace neuralNet {
 			}
 			if (_config.getBatchSize() > 0)
 			{
-				shuffle(trainingIndices);
+				//shuffle(trainingIndices);
 			}
 
 			//process data set
@@ -109,8 +126,9 @@ namespace neuralNet {
 				}
 
 					//process one batch
-					for (int inBatchIndex = currentIndex; inBatchIndex < currentIndex + _config.getBatchSize() && inBatchIndex < data.size(); inBatchIndex++)
+					for (int inBatchIndex = currentIndex; inBatchIndex < (currentIndex + _config.getBatchSize()) && inBatchIndex < data.size(); inBatchIndex++)
 					{
+
 						//forward pass
 						vector<float> realOutput = network->calculateOutput(data[trainingIndices[inBatchIndex]].Input());
 
@@ -122,22 +140,20 @@ namespace neuralNet {
 						{
 							network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError() =
 								_config.ErrorFunction()->calculatePartialDerivaitve(
-									data[inBatchIndex].Output(),
+									data[trainingIndices[inBatchIndex]].Output(),
 									realOutput, j) *
 								network->Layers()[network->Layers().size() - 1]->Neurons()[j]->ActivationFunction()->
 								calculateFirstDerivative(network->Layers()[network->Layers().size() - 1]->Neurons()[j]->getLastSum());
 
-							nablaThresholds[network->Layers().size() - 1][j] += _config.getLearningRate() *
-								network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError;
+							nablaThresholds[network->Layers().size() - 1][j] += 
+								network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError();
 
 							for (int i = 0; i < network->Layers()[network->Layers().size() - 1]->Neurons()[j]->Weights().size(); i++)
 							{
 								nablaWeights[network->Layers().size() - 1][j][i] +=
-									_config.getLearningRate()*
 									network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError() *
-									(network->Layers().size() > 1 ?
-										network->Layers()[network->Layers().size() - 1 - 1]->Neurons()[i]->getLastState() :
-										data[inBatchIndex].Input[i]);
+									network->Layers()[network->Layers().size() - 1 - 1]->Neurons()[i]->getLastState();
+
 							}
 						}
 
@@ -161,16 +177,18 @@ namespace neuralNet {
 										network->Layers()[hiddenLayerIndex]->Neurons()[j]->getLastSum()
 									);
 
-								nablaThresholds[hiddenLayerIndex][j] += _config.getLearningRate()*
+								nablaThresholds[hiddenLayerIndex][j] +=
 									network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError();
 
 								for (int i = 0; i < network->Layers()[hiddenLayerIndex]->Neurons()[j]->Weights().size(); i++)
 								{
-									nablaWeights[hiddenLayerIndex][j][i] += _config.getLearningRate() *
+									nablaWeights[hiddenLayerIndex][j][i] +=
 										network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError() *
-										(hiddenLayerIndex > 0 ?
-											network->Layers()[hiddenLayerIndex - 1]->Neurons()[i]->getLastState() :
-											data[inBatchIndex].Input[i]);
+										(hiddenLayerIndex > 0 ? 
+											network->Layers()[hiddenLayerIndex - 1]->Neurons()[i]->getLastState() : 
+											data[trainingIndices[inBatchIndex]].Input()[i]);
+										
+
 								}
 							}
 						}
@@ -179,23 +197,28 @@ namespace neuralNet {
 				//update weights and bias
 				for (int layerIndex = 0; layerIndex < network->Layers().size(); layerIndex++)
 				{
+					_logger << "layer: " << layerIndex << std::endl;
 					for (int neuronIndex = 0; 
 						neuronIndex < network->Layers()[layerIndex]->Neurons().size(); 
 						neuronIndex++)
 					{
+						
 						network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold() =
 							network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold()*
-							(1 - _config.getLearningRate()) +	//примен€ем регул€ризацию
-							nablaThresholds[layerIndex][neuronIndex];
+							(1 - _config.getRegularizationFactor()) +	//примен€ем регул€ризацию
+							_config.getLearningRate() * nablaThresholds[layerIndex][neuronIndex];
+						_logger << "T: "<< network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold() << "\t\t";
 						for (int weightIndex = 0; 
 							weightIndex < network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights().size();
 							weightIndex++)
 						{
 							network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] =
 								network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex]*
-								(1 - _config.getLearningRate()) + //примен€ем регул€ризацию
-								nablaWeights[layerIndex][neuronIndex][weightIndex];
+								(1 - _config.getRegularizationFactor()) - //примен€ем регул€ризацию
+								_config.getLearningRate() * nablaWeights[layerIndex][neuronIndex][weightIndex];
+							_logger << network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] << "\t\t";
 						}
+						_logger << std::endl;
 					}
 				}
 
@@ -236,18 +259,5 @@ namespace neuralNet {
 		} while (epochNumber < _config.getMaxEpoches() &&
 			currentError > _config.getMinError() &&
 			abs(currentError - lastError) > _config.getMinErrorChange());
-
-		//чистка пам€ти nablов
-		for (int i = 0; i < network->Layers().size(); i++)
-		{
-			for (int j = 0; j < network->Layers()[i]->Neurons().size(); j++)
-			{
-				delete nablaWeights[i][j];
-			}
-			delete nablaWeights[i];
-			delete nablaThresholds[i];
-		}
-		delete nablaWeights;
-		delete nablaThresholds;
 	}
 }

@@ -10,10 +10,10 @@ namespace neuralNet {
 	};
 	template<typename T>
 	float HalfSquaredEuclidianDistance<T>::calculate(const vector<T>& etalon, const vector<T>& outOfNet) {
-		double d = 0;
-		for (int i = 0; i < v1.Length; i++)
+		float d = 0;
+		for (int i = 0; i < outOfNet.size(); i++)
 		{
-			d += (v1[i] - v2[i]) * (v1[i] - v2[i]);
+			d += (etalon[i] - outOfNet[i]) * (etalon[i] - outOfNet[i]);
 		}
 		return 0.5 * d;
 	}

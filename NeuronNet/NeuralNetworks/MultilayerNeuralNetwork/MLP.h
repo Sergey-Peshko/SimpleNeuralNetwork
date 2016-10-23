@@ -31,7 +31,7 @@ namespace neuralNet {
 		for (size_t i = 1; i < layersSizes.size() - 1; i++) {
 			_layers[i] = new Layer(layersSizes[i - 1], layersSizes[i], hidden);
 		}
-		_layers[layersSizes.size() - 1] = new Layer(layersSizes.size() - 2,
+		_layers[layersSizes.size() - 1] = new Layer(layersSizes[layersSizes.size() - 2],
 			layersSizes[layersSizes.size() - 1], 
 			out);
 

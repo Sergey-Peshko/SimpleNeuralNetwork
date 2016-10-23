@@ -20,6 +20,8 @@
 #include<ctime>
 #include<random>
 #include<sstream>
+#include<iostream>
+#include<chrono>
 
 using std::vector;
 using std::ostream;

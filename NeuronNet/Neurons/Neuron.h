@@ -29,7 +29,7 @@ namespace neuralNet {
 	Neuron::Neuron(size_t weightsSize,
 		std::mt19937& generator,
 		std::uniform_real_distribution<float>& urd,
-		IActivationFunction* activationFunction) : weights(weightsSize)
+		IActivationFunction* activationFunction) : weights(weightsSize), threshold(0.0)
 	{
 		for (size_t i = 0; i < weightsSize; i++) {
 			weights[i] = urd(generator);

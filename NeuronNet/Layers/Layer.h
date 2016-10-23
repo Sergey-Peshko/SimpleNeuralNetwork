@@ -24,7 +24,7 @@ namespace neuralNet {
 		lastOut(neuronsSize),
 		inputDimension(inputDimension)
 	{
-		std::mt19937 generator(time(NULL));
+		std::mt19937 generator((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
 		float board = 1. / sqrtf(neuronsSize);
 		std::uniform_real_distribution<float> urd(-board, std::nextafter(board, FLT_MAX));
 
