@@ -26,10 +26,10 @@ int main()
 	data.push_back(DataItem<float>({ 0,1 }, { 1 }));
 	data.push_back(DataItem<float>({ 1,0 }, { 1 }));
 	data.push_back(DataItem<float>({ 1,1 }, { 0 }));
-	data.push_back(DataItem<float>({ -1,-1 }, { 0 }));
-	data.push_back(DataItem<float>({ -1,-2 }, { 1 }));
-	data.push_back(DataItem<float>({ 2,-1 }, { 1 }));
-	data.push_back(DataItem<float>({ 2,2 }, { 0 }));
+	//data.push_back(DataItem<float>({ -1,-1 }, { 0 }));
+	//data.push_back(DataItem<float>({ -1,-2 }, { 1 }));
+	//data.push_back(DataItem<float>({ 2,-1 }, { 1 }));
+	//data.push_back(DataItem<float>({ 2,2 }, { 0 }));
 
 	mlp.train(data);
 	print(mlp.calculateOutput({ 0,0 }));

@@ -235,6 +235,7 @@ namespace neuralNet {
 				currentError += _config.ErrorFunction()->calculate(data[i].Output(), realOutput);
 			}
 			//regularization term
+			/*
 				float reg = 0;
 				for (int layerIndex = 0; layerIndex < network->Layers().size(); layerIndex++)
 				{
@@ -249,6 +250,7 @@ namespace neuralNet {
 				}
 				reg = reg / 2;
 				currentError += reg;
+				*/
 			
 			epochNumber++;
 
