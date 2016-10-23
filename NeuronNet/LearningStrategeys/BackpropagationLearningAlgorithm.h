@@ -105,7 +105,7 @@ namespace neuralNet {
 			}
 			if (_config.getBatchSize() > 0)
 			{
-				//shuffle(trainingIndices);
+				shuffle(trainingIndices);
 			}
 
 			//process data set
