@@ -92,17 +92,18 @@ namespace neuralNet {
 
 		//#endregion
 
+		vector<int> trainingIndices(data.size());
+		for (int i = 0; i < data.size(); i++)
+		{
+			trainingIndices[i] = i;
+		}
+
 		do
 		{
 			lastError = currentError;
 			int dtStart = clock();
 
-			//preparation for epoche
-			vector<int> trainingIndices(data.size());
-			for (int i = 0; i < data.size(); i++)
-			{
-				trainingIndices[i] = i;
-			}
+			//preparation for epoche		
 			if (_config.getBatchSize() > 0)
 			{
 				shuffle(trainingIndices);
@@ -160,7 +161,7 @@ namespace neuralNet {
 
 						//hidden layers
 						//.......................................Œ¡–¿¡Œ“ ¿ — –€“€’ —ÀŒ≈¬
-						for (int hiddenLayerIndex = network->Layers().size() - 2; hiddenLayerIndex >= 0; hiddenLayerIndex--)
+						for (int hiddenLayerIndex = network->Layers().size() - 2; hiddenLayerIndex > 0; hiddenLayerIndex--)
 						{
 							for (int j = 0; j < network->Layers()[hiddenLayerIndex]->Neurons().size(); j++)
 							{
@@ -192,6 +193,35 @@ namespace neuralNet {
 								}
 							}
 						}
+						//.......................................Œ¡–¿¡Œ“ ¿ œ≈–¬Œ√Œ — –€“Œ√Œ —ÀŒﬂ
+						for (int j = 0; j < network->Layers()[0]->Neurons().size(); j++)
+						{
+							network->Layers()[0]->Neurons()[j]->LastError() = 0;
+							for (int k = 0; k < network->Layers()[0 + 1]->Neurons().size(); k++)
+							{
+								network->Layers()[0]->Neurons()[j]->LastError() +=
+									network->Layers()[1]->Neurons()[k]->Weights()[j] *
+									network->Layers()[1]->Neurons()[k]->LastError();
+							}
+							network->Layers()[0]->Neurons()[j]->LastError() *=
+								network->Layers()[0]->Neurons()[j]->ActivationFunction()->
+								calculateFirstDerivative(
+									network->Layers()[0]->Neurons()[j]->getLastSum()
+								);
+
+							nablaThresholds[0][j] +=
+								network->Layers()[0]->Neurons()[j]->LastError();
+
+							for (int i = 0; i < network->Layers()[0]->Neurons()[j]->Weights().size(); i++)
+							{
+								nablaWeights[0][j][i] +=
+									network->Layers()[0]->Neurons()[j]->LastError() *
+									data[trainingIndices[inBatchIndex]].Input()[i];
+
+
+							}
+						}
+
 					}
 
 				//update weights and bias
@@ -235,7 +265,7 @@ namespace neuralNet {
 				currentError += _config.ErrorFunction()->calculate(data[i].Output(), realOutput);
 			}
 			//regularization term
-			/*
+			
 				float reg = 0;
 				for (int layerIndex = 0; layerIndex < network->Layers().size(); layerIndex++)
 				{
@@ -250,7 +280,7 @@ namespace neuralNet {
 				}
 				reg = reg / 2;
 				currentError += reg;
-				*/
+				
 			
 			epochNumber++;
 

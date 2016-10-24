@@ -10,12 +10,14 @@ namespace neuralNet {
 		size_t inputDimension;
 	public:
 		Layer(size_t inputDimension,size_t neuronsSize, IActivationFunction* activationFunction);
+		Layer(const Layer& obj);
 		~Layer();
 		// Унаследовано через ILayer
 		virtual const vector<float>& calculate(const vector<float>& inputVector) override;
 		virtual const vector<float>& LastOutput() override;
 		virtual vector<INeuron*>& Neurons() override;
 		virtual size_t getInputDimension() override;
+		virtual ILayer* clone() override;
 	};
 	Layer::Layer(size_t inputDimension, 
 		size_t neuronsSize, 
@@ -30,6 +32,15 @@ namespace neuralNet {
 
 		for (size_t i = 0; i < neuronsSize; i++) {
 			neurons[i] = new Neuron(inputDimension, generator, urd, activationFunction);
+		}
+	}
+	Layer::Layer(const Layer& obj) :
+		inputDimension(obj.inputDimension),
+		lastOut(obj.lastOut),
+		neurons(obj.neurons.size())
+	{
+		for (size_t i = 0; i < neurons.size(); i++) {
+			neurons[i] = obj.neurons[i]->clone();
 		}
 	}
 	Layer::~Layer() {
@@ -59,5 +70,7 @@ namespace neuralNet {
 	{
 		return inputDimension;
 	}
-
+	ILayer* Layer::clone() {
+		return new Layer(*this);
+	}
 }

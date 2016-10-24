@@ -16,5 +16,6 @@ namespace neuralNet {
 	//	virtual vector<INeuron*>& getParents() = 0;
 		virtual IActivationFunction* ActivationFunction() = 0;
 		virtual float& LastError() = 0;
+		virtual INeuron* clone() = 0;
 	};
 }

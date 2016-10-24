@@ -9,5 +9,6 @@ namespace neuralNet {
 		virtual const vector<float>& LastOutput() = 0;
 		virtual vector<INeuron*>& Neurons() = 0;
 		virtual size_t getInputDimension() = 0;
+		virtual ILayer* clone() = 0;
 	};
 }

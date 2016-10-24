@@ -16,6 +16,7 @@ namespace neuralNet {
 			std::mt19937& generator, 
 			std::uniform_real_distribution<float>& urd,
 			IActivationFunction* activationFunction);
+		Neuron(const Neuron& obj);
 		~Neuron();
 		// Унаследовано через INeuron
 		virtual vector<float>& Weights() override;
@@ -25,6 +26,7 @@ namespace neuralNet {
 		virtual float getLastSum() override;
 		virtual IActivationFunction * ActivationFunction() override;
 		virtual float & LastError() override;
+		virtual INeuron* clone() override;
 	};
 	Neuron::Neuron(size_t weightsSize,
 		std::mt19937& generator,
@@ -35,6 +37,15 @@ namespace neuralNet {
 			weights[i] = urd(generator);
 		}
 		this->activationFunction = activationFunction->clone();
+	}
+	Neuron::Neuron(const Neuron& obj) :
+	weights(obj.weights),
+	threshold(obj.threshold),
+	lastState(obj.lastState),
+	lastSum(obj.lastSum),
+	lastError(obj.lastError)
+	{
+		activationFunction = obj.activationFunction->clone();
 	}
 	Neuron::~Neuron() {
 		delete activationFunction;
@@ -86,5 +97,7 @@ namespace neuralNet {
 	{
 		return lastError;
 	}
-
+	INeuron* Neuron::clone() {
+		return new Neuron(*this);
+	}
 }
