@@ -6,7 +6,6 @@
 namespace neuralNet {
 	class LearningAlgorithmConfig {
 	private:
-		//trainer
 		float learningRate;
 		int batchSize;
 		float regularizationFactor;
@@ -14,8 +13,6 @@ namespace neuralNet {
 		float minError;
 		float minErrorChange;
 		IErrorFunction<float>* errorFunction;
-		//preTrainer
-		int maxEpochesOfPreTrein;
 	public:
 		LearningAlgorithmConfig() {
 			//trainer
@@ -26,8 +23,6 @@ namespace neuralNet {
 			minError = 0.00001;
 			minErrorChange = 0.000'000'000'001;
 			errorFunction = new HalfSquaredEuclidianDistance<float>();
-			//preTrainer
-			maxEpochesOfPreTrein = 50;
 		}
 		float getLearningRate() {
 			return learningRate;
@@ -67,12 +62,6 @@ namespace neuralNet {
 		}
 		IErrorFunction<float>* ErrorFunction() {
 			return errorFunction;
-		}
-		int getMaxEpochesOfPreTrein() {
-			return maxEpochesOfPreTrein;
-		}
-		void settMaxEpochesOfPreTrein(int value) {
-			maxEpochesOfPreTrein = value;
 		}
 	};
 }

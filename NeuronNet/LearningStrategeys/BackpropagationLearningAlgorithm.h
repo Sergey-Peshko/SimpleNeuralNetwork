@@ -58,19 +58,20 @@ namespace neuralNet {
 	}
 	void neuralNet::BackpropagationLearningAlgorithm::train(IMultilayerNeuralNetwork* network, vector<DataItem<float>>& data)
 	{
-	//	network->Layers()[0]->Neurons()[0]->Weights()[0] = -0.5;
-	//	network->Layers()[0]->Neurons()[0]->Weights()[1] = 0.5;
-	//	network->Layers()[0]->Neurons()[1]->Weights()[0] = 0.5;
-	//	network->Layers()[0]->Neurons()[1]->Weights()[1] = -0.5;
+		network->Layers()[0]->Neurons()[0]->Weights()[0] = -0.5;
+		network->Layers()[0]->Neurons()[0]->Weights()[1] = 0.5;
+		network->Layers()[0]->Neurons()[1]->Weights()[0] = 0.5;
+		network->Layers()[0]->Neurons()[1]->Weights()[1] = -0.5;
 
-	//	network->Layers()[1]->Neurons()[0]->Weights()[0] = 1;
-	//	network->Layers()[1]->Neurons()[0]->Weights()[1] = 1;
+		network->Layers()[1]->Neurons()[0]->Weights()[0] = 1;
+		network->Layers()[1]->Neurons()[0]->Weights()[1] = 1;
 
 		if (_config.getBatchSize() < 1 || _config.getBatchSize() > data.size())
 		{
 			_config.setBatchSize(data.size());
 		}
 		float currentError = FLT_MAX;
+		float currRegError;
 		float lastError = 0;
 		int epochNumber = 0;
 		_logger << ("BPA Start learning...") << std::endl;
@@ -266,27 +267,31 @@ namespace neuralNet {
 			}
 			//regularization term
 			
-				float reg = 0;
+				currRegError = 0;
 				for (int layerIndex = 0; layerIndex < network->Layers().size(); layerIndex++)
 				{
 					for (int neuronIndex = 0; neuronIndex < network->Layers()[layerIndex]->Neurons().size(); neuronIndex++)
 					{
 						for (int weightIndex = 0; weightIndex < network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights().size(); weightIndex++)
 						{
-							reg += network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] *
+							currRegError += network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] *
 								network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex];
 						}
 					}
 				}
-				reg = reg / 2;
-				currentError += reg;
+				currRegError = currRegError / 2;
+				
 				
 			
 			epochNumber++;
 
 			_logger << "Eposh #" << epochNumber << std::endl
 				<< " finished; current error is " << currentError
+				<< " current regularization error is " << currRegError
+				<< " Summary error is " << currentError + currRegError
 				<< "; it takes: " << (clock() - dtStart) << std::endl;
+			
+			currentError += currRegError;
 
 		} while (epochNumber < _config.getMaxEpoches() &&
 			currentError > _config.getMinError() &&
