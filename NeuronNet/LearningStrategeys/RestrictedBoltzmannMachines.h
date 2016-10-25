@@ -3,16 +3,23 @@
 #include "ILearningStrategey.h";
 #include "..\NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h"
 #include"LearningAlgorithmConfig.h"
+#include"..\ActivationFunctions\Linear.h"
 namespace neuralNet {
 	class RestrictedBoltzmannMachines : public ILearningStrategy<IMultilayerNeuralNetwork> {
 	private:
 		LearningAlgorithmConfig _config;
 		std::ofstream _logger;
 		int _paramCD;	//k параметр CD-k правила
-		ILayer* _typeLayer;
+
+		struct OutputLayer
+		{
+			vector<float> out;
+			vector<float> sum;
+		};
 
 		void shuffle(vector<int>& arr);
-		vector<float> calculateInvertedOut(ILayer* layer, vector<float>& invertedOut);
+		void calculateInvertedOut(OutputLayer& invertedLayer, ILayer* layer, vector<float>& input, IActivationFunction* activationFunction);
+		void calculateInvertedOut(OutputLayer& invertedLayer, ILayer* layer, vector<float>& input);
 	public:
 		// Унаследовано через ILearningStrategy
 		virtual void train(IMultilayerNeuralNetwork * network, vector<DataItem<float>>& data) override;
@@ -71,31 +78,48 @@ namespace neuralNet {
 				//process one batch
 				for (int inBatchIndex = currentIndex; inBatchIndex < (currentIndex + _config.getBatchSize()) && inBatchIndex < data.size(); inBatchIndex++)
 				{
-					vector<float> currRealOutput;
-					vector<float> nextRealOutput;
+					vector<float> currOutput;
+					vector<float> nextOutput;
 
-					vector<float> currRealInput;
-					vector<float> nextRealInput;
+					vector<float> currInput;
+					OutputLayer nextInput;
 
-					currRealInput = data[trainingIndices[inBatchIndex]].Input();//x(0)
-					currRealOutput = network->Layers()[0]->calculate(currRealInput);//y(0)
-					nextRealInput = calculateInvertedOut(network->Layers()[0], currRealOutput);//x(1)
-					nextRealOutput = network->Layers()[0]->calculate(nextRealInput);//y(1)
+					//currInput = data[trainingIndices[inBatchIndex]].Input();//x(0)
+					//снос поргов, но пока пороги равны 0 и поэтому сноса нет
+					currOutput = network->Layers()[0]->calculate(data[trainingIndices[inBatchIndex]].Input());//y(0)
+					calculateInvertedOut(nextInput, network->Layers()[0], currOutput, new Linear());//x(1)
+					nextOutput = network->Layers()[0]->calculate(nextInput.out);//y(1)
 
-					for (size_t i = 0; i < network->Layers()[0]->Neurons().size(); i++) {
-						nablaThresholdsOut[i] +=
-							(nextRealOutput[i] - currRealOutput[i]);// * F'(Sj(1))
+					//просчет наблов
+					for (size_t j = 0; j < network->Layers()[0]->Neurons().size(); j++) {
+						nablaThresholdsOut[j] +=
+							(nextOutput[j] - currOutput[j]) *
+							network->Layers()[0]->Neurons()[j]->ActivationFunction()->calculateFirstDerivative(
+								network->Layers()[0]->Neurons()[j]->getLastSum());// * F'(Sj(1))
 
-						for (size_t j = 0; j < network->Layers()[0]->Neurons()[i]->Weights().size(); j++) {
-
+						for (size_t i = 0; i < network->Layers()[0]->Neurons()[j]->Weights().size(); i++) {
+							nablaWeights[j][i] +=
+								(nextOutput[j] - currOutput[j]) *
+								nextInput.out[i] *
+								network->Layers()[0]->Neurons()[j]->ActivationFunction()->calculateFirstDerivative(
+									network->Layers()[0]->Neurons()[j]->getLastSum())
+								+
+								(nextInput.out[i] - currInput[i])*
+								currOutput[j] *
+								nextInput.sum[i];// * F'(Si(1))
 						}
+					}
+					for (size_t i = 0; i < nablaThresholdsIn.size(); i++) {
+						nablaThresholdsIn[i] +=
+							(nextInput.out[i] - currInput[i])*
+							nextInput.sum[i];// * F'(Si(1))
 					}
 
 					for (size_t i = 1; i < _paramCD; i++) {
-						currRealInput = nextRealOutput;//x(t)
-						currRealOutput = network->Layers()[0]->calculate(currRealInput);//y(t)
-						nextRealInput = calculateInvertedOut(network->Layers()[0], currRealOutput);//x(t+1)
-						nextRealOutput = network->Layers()[0]->calculate(nextRealInput);//y(t+1)
+					//	currInput = nextOutput;//x(t)
+					//	currOutput = network->Layers()[0]->calculate(currInput);//y(t)
+					//	nextInput = calculateInvertedOut(network->Layers()[0], currOutput);//x(t+1)
+					//	nextOutput = network->Layers()[0]->calculate(nextInput);//y(t+1)
 					}
 
 				}

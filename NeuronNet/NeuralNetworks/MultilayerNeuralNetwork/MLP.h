@@ -30,7 +30,7 @@ namespace neuralNet {
 		IActivationFunction* out,
 		ILearningStrategy<IMultilayerNeuralNetwork>* learningStrategy) :
 		_layers(layersSizes.size()),
-		_inputThresholds(inputDimension)
+		_inputThresholds(inputDimension, 0)
 	{
 		_layers[0] = new Layer(inputDimension, layersSizes[0], hidden);
 		for (size_t i = 1; i < layersSizes.size() - 1; i++) {
