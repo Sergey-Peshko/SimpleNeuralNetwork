@@ -72,9 +72,6 @@
     <ClInclude Include="LearningStrategeys\ILearningStrategey.h">
       <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
-    <ClInclude Include="LearningStrategeys\RestrictedBoltzmannMachines.h">
-      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
-    </ClInclude>
     <ClInclude Include="ErrorFunctions\HalfSquaredEuclidianDistance.h">
       <Filter>Заголовочные файлы\ErrorFunctions</Filter>
     </ClInclude>
@@ -98,6 +95,12 @@
     </ClInclude>
     <ClInclude Include="ActivationFunctions\Sigmoid.h">
       <Filter>Заголовочные файлы\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivationFunctions\Linear.h">
+      <Filter>Заголовочные файлы\ActivationFunctions</Filter>
+    </ClInclude>
+    <ClInclude Include="LearningStrategeys\RestrictedBoltzmannMachines.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

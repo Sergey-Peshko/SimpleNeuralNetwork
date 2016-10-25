@@ -9,6 +9,8 @@ namespace neuralNet {
 		vector<ILayer*> _layers;
 		ILearningStrategy<IMultilayerNeuralNetwork>* _learningStrategy;
 		//ILearningStrategy<IMultilayerNeuralNetwork>* _pre_learningStrategy;
+
+		vector<float> _inputThresholds;
 	public:
 		MLP(size_t inputDimension, vector<size_t> layersSizes, 
 			IActivationFunction* hidden, IActivationFunction* out,
@@ -19,13 +21,16 @@ namespace neuralNet {
 		virtual void save(std::string way) override;
 		virtual void train(vector<DataItem<float>>& data) override;
 		virtual vector<ILayer*>& Layers() override;
+
+		virtual vector<float>& InputThresholds() override;
 	};
 	MLP::MLP(size_t inputDimension, 
 		vector<size_t> layersSizes, 
 		IActivationFunction* hidden, 
 		IActivationFunction* out,
 		ILearningStrategy<IMultilayerNeuralNetwork>* learningStrategy) :
-		_layers(layersSizes.size())
+		_layers(layersSizes.size()),
+		_inputThresholds(inputDimension)
 	{
 		_layers[0] = new Layer(inputDimension, layersSizes[0], hidden);
 		for (size_t i = 1; i < layersSizes.size() - 1; i++) {
@@ -45,6 +50,9 @@ namespace neuralNet {
 	vector<float> MLP::calculateOutput(vector<float> inputVector)
 	{
 		vector<float> out;
+		for (size_t i = 0; i < inputVector.size(); i++) {
+			inputVector[i] -= _inputThresholds[i];
+		}
 		for (size_t i = 0; i < _layers.size(); i++) {
 			out = _layers[i]->calculate(inputVector);
 			inputVector = out;
@@ -66,4 +74,7 @@ namespace neuralNet {
 		return _layers;
 	}
 
+	vector<float>& MLP::InputThresholds() {
+		return _inputThresholds;
+	}
 }

@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ActivationFunctions\IActivationFunction.h" />
+    <ClInclude Include="ActivationFunctions\Linear.h" />
     <ClInclude Include="ActivationFunctions\Relu.h" />
     <ClInclude Include="ActivationFunctions\Sigmoid.h" />
     <ClInclude Include="Data\DataItem.h" />

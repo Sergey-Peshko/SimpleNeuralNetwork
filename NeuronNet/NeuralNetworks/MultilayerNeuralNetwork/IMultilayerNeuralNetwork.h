@@ -7,5 +7,6 @@ namespace neuralNet {
 	class IMultilayerNeuralNetwork abstract : public INeuralNetwork {
 	public:
 		virtual vector<ILayer*>& Layers() = 0;
+		virtual vector<float>& InputThresholds() = 0;
 	};
 }
