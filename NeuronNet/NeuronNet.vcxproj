@@ -153,6 +153,7 @@
     <ClInclude Include="ErrorFunctions\HalfSquaredEuclidianDistance.h" />
     <ClInclude Include="ErrorFunctions\IErrorFunction.h" />
     <ClInclude Include="Layers\ILayer.h" />
+    <ClInclude Include="Layers\InputLayer.h" />
     <ClInclude Include="Layers\Layer.h" />
     <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithm.h" />
     <ClInclude Include="LearningStrategeys\ILearningStrategey.h" />
@@ -161,7 +162,10 @@
     <ClInclude Include="NeuralNetworks\INeuralNetwork.h" />
     <ClInclude Include="NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h" />
     <ClInclude Include="NeuralNetworks\MultilayerNeuralNetwork\MLP.h" />
+    <ClInclude Include="NeuralNetworks\RecurentNeuralNetwork\IRecurentNeuralNetwork.h" />
+    <ClInclude Include="NeuralNetworks\RecurentNeuralNetwork\OLRNN.h" />
     <ClInclude Include="Neurons\INeuron.h" />
+    <ClInclude Include="Neurons\InputNeuron.h" />
     <ClInclude Include="Neurons\Neuron.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

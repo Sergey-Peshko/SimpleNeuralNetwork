@@ -58,13 +58,13 @@ namespace neuralNet {
 	}
 	void neuralNet::BackpropagationLearningAlgorithm::train(IMultilayerNeuralNetwork* network, vector<DataItem<float>>& data)
 	{
-		network->Layers()[0]->Neurons()[0]->Weights()[0] = -0.5;
-		network->Layers()[0]->Neurons()[0]->Weights()[1] = 0.5;
-		network->Layers()[0]->Neurons()[1]->Weights()[0] = 0.5;
-		network->Layers()[0]->Neurons()[1]->Weights()[1] = -0.5;
+		network->HiddenLayers()[0]->Neurons()[0]->Weights()[0] = -0.5;
+		network->HiddenLayers()[0]->Neurons()[0]->Weights()[1] = 0.5;
+		network->HiddenLayers()[0]->Neurons()[1]->Weights()[0] = 0.5;
+		network->HiddenLayers()[0]->Neurons()[1]->Weights()[1] = -0.5;
 
-		network->Layers()[1]->Neurons()[0]->Weights()[0] = 1;
-		network->Layers()[1]->Neurons()[0]->Weights()[1] = 1;
+		network->HiddenLayers()[1]->Neurons()[0]->Weights()[0] = 1;
+		network->HiddenLayers()[1]->Neurons()[0]->Weights()[1] = 1;
 
 		if (_config.getBatchSize() < 1 || _config.getBatchSize() > data.size())
 		{
@@ -78,16 +78,16 @@ namespace neuralNet {
 
 		//#region initialize accumulated error for batch, for weights and biases
 
-		vector<vector<vector<float>>> nablaWeights(network->Layers().size()) ;
-		vector<vector<float>> nablaThresholds(network->Layers().size());
+		vector<vector<vector<float>>> nablaWeights(network->HiddenLayers().size()) ;
+		vector<vector<float>> nablaThresholds(network->HiddenLayers().size());
 
-		for (int i = 0; i < network->Layers().size(); i++)
+		for (int i = 0; i < network->HiddenLayers().size(); i++)
 		{
-			nablaWeights[i].resize(network->Layers()[i]->Neurons().size());
-			nablaThresholds[i].resize(network->Layers()[i]->Neurons().size());
-			for (int j = 0; j < network->Layers()[i]->Neurons().size(); j++)
+			nablaWeights[i].resize(network->HiddenLayers()[i]->Neurons().size());
+			nablaThresholds[i].resize(network->HiddenLayers()[i]->Neurons().size());
+			for (int j = 0; j < network->HiddenLayers()[i]->Neurons().size(); j++)
 			{
-				nablaWeights[i][j].resize(network->Layers()[i]->Neurons()[j]->Weights().size());
+				nablaWeights[i][j].resize(network->HiddenLayers()[i]->Neurons()[j]->Weights().size());
 			}
 		}
 
@@ -115,11 +115,11 @@ namespace neuralNet {
 			do
 			{
 				//обнуление ошибок группы
-				for (int i = 0; i < network->Layers().size(); i++)
+				for (int i = 0; i < network->HiddenLayers().size(); i++)
 				{
-					for (int j = 0; j < network->Layers()[i]->Neurons().size(); j++)
+					for (int j = 0; j < network->HiddenLayers()[i]->Neurons().size(); j++)
 					{
-						for (int k = 0; k < network->Layers()[i]->Neurons()[j]->Weights().size(); k++)
+						for (int k = 0; k < network->HiddenLayers()[i]->Neurons()[j]->Weights().size(); k++)
 						{
 							nablaWeights[i][j][k] = 0;
 						}
@@ -138,23 +138,23 @@ namespace neuralNet {
 						//backward pass, error propagation
 						//last layer
 						//.......................................ОБРАБОТКА ПОСЛЕДНЕГО СЛОЯ
-						for (int j = 0; j < network->Layers()[network->Layers().size() - 1]->Neurons().size(); j++)
+						for (int j = 0; j < network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons().size(); j++)
 						{
-							network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError() =
+							network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[j]->LastError() =
 								_config.ErrorFunction()->calculatePartialDerivaitve(
 									data[trainingIndices[inBatchIndex]].Output(),
 									realOutput, j) *
-								network->Layers()[network->Layers().size() - 1]->Neurons()[j]->ActivationFunction()->
-								calculateFirstDerivative(network->Layers()[network->Layers().size() - 1]->Neurons()[j]->getLastSum());
+								network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[j]->ActivationFunction()->
+								calculateFirstDerivative(network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[j]->getLastSum());
 
-							nablaThresholds[network->Layers().size() - 1][j] += 
-								network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError();
+							nablaThresholds[network->HiddenLayers().size() - 1][j] += 
+								network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[j]->LastError();
 
-							for (int i = 0; i < network->Layers()[network->Layers().size() - 1]->Neurons()[j]->Weights().size(); i++)
+							for (int i = 0; i < network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[j]->Weights().size(); i++)
 							{
-								nablaWeights[network->Layers().size() - 1][j][i] +=
-									network->Layers()[network->Layers().size() - 1]->Neurons()[j]->LastError() *
-									network->Layers()[network->Layers().size() - 1 - 1]->Neurons()[i]->getLastState();
+								nablaWeights[network->HiddenLayers().size() - 1][j][i] +=
+									network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[j]->LastError() *
+									network->HiddenLayers()[network->HiddenLayers().size() - 1 - 1]->Neurons()[i]->getLastState();
 
 							}
 						}
@@ -162,32 +162,32 @@ namespace neuralNet {
 
 						//hidden layers
 						//.......................................ОБРАБОТКА СКРЫТЫХ СЛОЕВ
-						for (int hiddenLayerIndex = network->Layers().size() - 2; hiddenLayerIndex > 0; hiddenLayerIndex--)
+						for (int hiddenLayerIndex = network->HiddenLayers().size() - 2; hiddenLayerIndex > 0; hiddenLayerIndex--)
 						{
-							for (int j = 0; j < network->Layers()[hiddenLayerIndex]->Neurons().size(); j++)
+							for (int j = 0; j < network->HiddenLayers()[hiddenLayerIndex]->Neurons().size(); j++)
 							{
-								network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError() = 0;
-								for (int k = 0; k < network->Layers()[hiddenLayerIndex + 1]->Neurons().size(); k++)
+								network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->LastError() = 0;
+								for (int k = 0; k < network->HiddenLayers()[hiddenLayerIndex + 1]->Neurons().size(); k++)
 								{
-									network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError() +=
-										network->Layers()[hiddenLayerIndex + 1]->Neurons()[k]->Weights()[j] *
-										network->Layers()[hiddenLayerIndex + 1]->Neurons()[k]->LastError();
+									network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->LastError() +=
+										network->HiddenLayers()[hiddenLayerIndex + 1]->Neurons()[k]->Weights()[j] *
+										network->HiddenLayers()[hiddenLayerIndex + 1]->Neurons()[k]->LastError();
 								}
-								network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError() *=
-									network->Layers()[hiddenLayerIndex]->Neurons()[j]->ActivationFunction()->
+								network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->LastError() *=
+									network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->ActivationFunction()->
 									calculateFirstDerivative(
-										network->Layers()[hiddenLayerIndex]->Neurons()[j]->getLastSum()
+										network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->getLastSum()
 									);
 
 								nablaThresholds[hiddenLayerIndex][j] +=
-									network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError();
+									network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->LastError();
 
-								for (int i = 0; i < network->Layers()[hiddenLayerIndex]->Neurons()[j]->Weights().size(); i++)
+								for (int i = 0; i < network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->Weights().size(); i++)
 								{
 									nablaWeights[hiddenLayerIndex][j][i] +=
-										network->Layers()[hiddenLayerIndex]->Neurons()[j]->LastError() *
+										network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->LastError() *
 										(hiddenLayerIndex > 0 ? 
-											network->Layers()[hiddenLayerIndex - 1]->Neurons()[i]->getLastState() : 
+											network->HiddenLayers()[hiddenLayerIndex - 1]->Neurons()[i]->getLastState() : 
 											data[trainingIndices[inBatchIndex]].Input()[i]);
 										
 
@@ -195,28 +195,28 @@ namespace neuralNet {
 							}
 						}
 						//.......................................ОБРАБОТКА ПЕРВОГО СКРЫТОГО СЛОЯ
-						for (int j = 0; j < network->Layers()[0]->Neurons().size(); j++)
+						for (int j = 0; j < network->HiddenLayers()[0]->Neurons().size(); j++)
 						{
-							network->Layers()[0]->Neurons()[j]->LastError() = 0;
-							for (int k = 0; k < network->Layers()[0 + 1]->Neurons().size(); k++)
+							network->HiddenLayers()[0]->Neurons()[j]->LastError() = 0;
+							for (int k = 0; k < network->HiddenLayers()[0 + 1]->Neurons().size(); k++)
 							{
-								network->Layers()[0]->Neurons()[j]->LastError() +=
-									network->Layers()[1]->Neurons()[k]->Weights()[j] *
-									network->Layers()[1]->Neurons()[k]->LastError();
+								network->HiddenLayers()[0]->Neurons()[j]->LastError() +=
+									network->HiddenLayers()[1]->Neurons()[k]->Weights()[j] *
+									network->HiddenLayers()[1]->Neurons()[k]->LastError();
 							}
-							network->Layers()[0]->Neurons()[j]->LastError() *=
-								network->Layers()[0]->Neurons()[j]->ActivationFunction()->
+							network->HiddenLayers()[0]->Neurons()[j]->LastError() *=
+								network->HiddenLayers()[0]->Neurons()[j]->ActivationFunction()->
 								calculateFirstDerivative(
-									network->Layers()[0]->Neurons()[j]->getLastSum()
+									network->HiddenLayers()[0]->Neurons()[j]->getLastSum()
 								);
 
 							nablaThresholds[0][j] +=
-								network->Layers()[0]->Neurons()[j]->LastError();
+								network->HiddenLayers()[0]->Neurons()[j]->LastError();
 
-							for (int i = 0; i < network->Layers()[0]->Neurons()[j]->Weights().size(); i++)
+							for (int i = 0; i < network->HiddenLayers()[0]->Neurons()[j]->Weights().size(); i++)
 							{
 								nablaWeights[0][j][i] +=
-									network->Layers()[0]->Neurons()[j]->LastError() *
+									network->HiddenLayers()[0]->Neurons()[j]->LastError() *
 									data[trainingIndices[inBatchIndex]].Input()[i];
 
 
@@ -226,28 +226,28 @@ namespace neuralNet {
 					}
 
 				//update weights and bias
-				for (int layerIndex = 0; layerIndex < network->Layers().size(); layerIndex++)
+				for (int layerIndex = 0; layerIndex < network->HiddenLayers().size(); layerIndex++)
 				{
 					//_logger << "layer: " << layerIndex << std::endl;
 					for (int neuronIndex = 0; 
-						neuronIndex < network->Layers()[layerIndex]->Neurons().size(); 
+						neuronIndex < network->HiddenLayers()[layerIndex]->Neurons().size(); 
 						neuronIndex++)
 					{
 						
-						network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold() =
-							network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold()*
+						network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Threshold() =
+							network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Threshold()*
 							(1 - _config.getRegularizationFactor()) +	//применяем регуляризацию
 							_config.getLearningRate() * nablaThresholds[layerIndex][neuronIndex];
-						//_logger << "T: "<< network->Layers()[layerIndex]->Neurons()[neuronIndex]->Threshold() << "\t\t";
+						//_logger << "T: "<< network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Threshold() << "\t\t";
 						for (int weightIndex = 0; 
-							weightIndex < network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights().size();
+							weightIndex < network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Weights().size();
 							weightIndex++)
 						{
-							network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] =
-								network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex]*
+							network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] =
+								network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex]*
 								(1 - _config.getRegularizationFactor()) - //применяем регуляризацию
 								_config.getLearningRate() * nablaWeights[layerIndex][neuronIndex][weightIndex];
-							//_logger << network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] << "\t\t";
+							//_logger << network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] << "\t\t";
 						}
 						//_logger << std::endl;
 					}
@@ -268,14 +268,14 @@ namespace neuralNet {
 			//regularization term
 			
 				currRegError = 0;
-				for (int layerIndex = 0; layerIndex < network->Layers().size(); layerIndex++)
+				for (int layerIndex = 0; layerIndex < network->HiddenLayers().size(); layerIndex++)
 				{
-					for (int neuronIndex = 0; neuronIndex < network->Layers()[layerIndex]->Neurons().size(); neuronIndex++)
+					for (int neuronIndex = 0; neuronIndex < network->HiddenLayers()[layerIndex]->Neurons().size(); neuronIndex++)
 					{
-						for (int weightIndex = 0; weightIndex < network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights().size(); weightIndex++)
+						for (int weightIndex = 0; weightIndex < network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Weights().size(); weightIndex++)
 						{
-							currRegError += network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] *
-								network->Layers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex];
+							currRegError += network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex] *
+								network->HiddenLayers()[layerIndex]->Neurons()[neuronIndex]->Weights()[weightIndex];
 						}
 					}
 				}

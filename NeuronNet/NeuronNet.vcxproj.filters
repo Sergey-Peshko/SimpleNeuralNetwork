@@ -37,6 +37,9 @@
     <Filter Include="Заголовочные файлы\NeuralNetworks\MultilayerNeuralNetwork">
       <UniqueIdentifier>{03bd2f88-62c8-4e94-bdec-a73b53f036c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Заголовочные файлы\NeuralNetworks\RecurentNeuralNetwork">
+      <UniqueIdentifier>{d394ebe3-a422-49b2-882e-62c687919293}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -101,6 +104,18 @@
     </ClInclude>
     <ClInclude Include="LearningStrategeys\RestrictedBoltzmannMachines.h">
       <Filter>Заголовочные файлы\LearningStrategeys</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetworks\RecurentNeuralNetwork\IRecurentNeuralNetwork.h">
+      <Filter>Заголовочные файлы\NeuralNetworks\RecurentNeuralNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="NeuralNetworks\RecurentNeuralNetwork\OLRNN.h">
+      <Filter>Заголовочные файлы\NeuralNetworks\RecurentNeuralNetwork</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\InputLayer.h">
+      <Filter>Заголовочные файлы\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Neurons\InputNeuron.h">
+      <Filter>Заголовочные файлы\Neurons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

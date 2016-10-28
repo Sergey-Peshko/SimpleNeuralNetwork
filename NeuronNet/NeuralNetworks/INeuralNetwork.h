@@ -1,6 +1,7 @@
 #pragma once
 #include "..\stdafx.h"
 #include "..\Data\DataItem.h"
+#include "..\Layers\ILayer.h"
 
 namespace neuralNet {
 	class INeuralNetwork {
