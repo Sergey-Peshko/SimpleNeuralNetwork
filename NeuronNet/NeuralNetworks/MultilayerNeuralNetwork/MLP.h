@@ -42,14 +42,21 @@ namespace neuralNet {
 	{
 		_inputLayer = new InputLayer(inputDimension);
 
-		_hiddenLayers[0] = new Layer(inputDimension, hiddenLayersSizes[0], hidden);
-		for (size_t i = 1; i < hiddenLayersSizes.size(); i++) {
-			_hiddenLayers[i] = new Layer(hiddenLayersSizes[i - 1], hiddenLayersSizes[i], hidden);
-		}
-		_outputLayer = new Layer(hiddenLayersSizes[hiddenLayersSizes.size() - 1],
-			outputDimension,
-			out);
+		if (!hiddenLayersSizes.empty()) {
+			_hiddenLayers[0] = new Layer(inputDimension, hiddenLayersSizes[0], hidden);
+			for (size_t i = 1; i < hiddenLayersSizes.size(); i++) {
+				_hiddenLayers[i] = new Layer(hiddenLayersSizes[i - 1], hiddenLayersSizes[i], hidden);
+			}
 
+			_outputLayer = new Layer(hiddenLayersSizes[hiddenLayersSizes.size() - 1],
+				outputDimension,
+				out);
+		}
+		else {
+			_outputLayer = new Layer(inputDimension,
+				outputDimension,
+				out);
+		}
 		_learningStrategy = learningStrategy;
 	}
 	MLP::~MLP() {
