@@ -7,13 +7,11 @@
 namespace neuralNet {
 	class RestrictedBoltzmannMachines : public ILearningStrategy<IMultilayerNeuralNetwork> {
 	private:
-		LearningAlgorithmConfig _config;
+		BackpropagationLearningAlgorithmConfig _config;
 		std::ofstream _logger;
 		int _paramCD;	//k параметр CD-k правила
 
 		void shuffle(vector<int>& arr);
-		void calculateInvertedOut(vector<float>& out, vector<float>& sum, ILayer* layer, vector<float>& input, IActivationFunction* activationFunction);
-		void calculateInvertedOut(vector<float>& out, vector<float>& sum, ILayer* layer, vector<float>& input);
 	public:
 		// ”наследовано через ILearningStrategy
 		virtual void train(IMultilayerNeuralNetwork * network, vector<DataItem<float>>& data) override;

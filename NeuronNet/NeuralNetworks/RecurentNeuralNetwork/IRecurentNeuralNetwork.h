@@ -6,6 +6,6 @@
 namespace neuralNet {
 	class IRecurentNeuralNetwork abstract : public INeuralNetwork {
 	public:
-		virtual vector<ILayer*>& HiddenLayers() = 0;
+		virtual vector<float> calculateInput(vector<float> outputVector) = 0;
 	};
 }

@@ -81,9 +81,6 @@
     <ClInclude Include="ErrorFunctions\IErrorFunction.h">
       <Filter>Заголовочные файлы\ErrorFunctions</Filter>
     </ClInclude>
-    <ClInclude Include="LearningStrategeys\LearningAlgorithmConfig.h">
-      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
-    </ClInclude>
     <ClInclude Include="Neurons\Neuron.h">
       <Filter>Заголовочные файлы\Neurons</Filter>
     </ClInclude>
@@ -116,6 +113,18 @@
     </ClInclude>
     <ClInclude Include="Neurons\InputNeuron.h">
       <Filter>Заголовочные файлы\Neurons</Filter>
+    </ClInclude>
+    <ClInclude Include="Layers\InvertedLayer.h">
+      <Filter>Заголовочные файлы\Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="Neurons\NeuronOfRNN.h">
+      <Filter>Заголовочные файлы\Neurons</Filter>
+    </ClInclude>
+    <ClInclude Include="LearningStrategeys\ContrastiveDivergence.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
+    </ClInclude>
+    <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithmConfig.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

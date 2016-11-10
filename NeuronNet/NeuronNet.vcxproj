@@ -154,10 +154,12 @@
     <ClInclude Include="ErrorFunctions\IErrorFunction.h" />
     <ClInclude Include="Layers\ILayer.h" />
     <ClInclude Include="Layers\InputLayer.h" />
+    <ClInclude Include="Layers\InvertedLayer.h" />
     <ClInclude Include="Layers\Layer.h" />
     <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithm.h" />
+    <ClInclude Include="LearningStrategeys\ContrastiveDivergence.h" />
     <ClInclude Include="LearningStrategeys\ILearningStrategey.h" />
-    <ClInclude Include="LearningStrategeys\LearningAlgorithmConfig.h" />
+    <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithmConfig.h" />
     <ClInclude Include="LearningStrategeys\RestrictedBoltzmannMachines.h" />
     <ClInclude Include="NeuralNetworks\INeuralNetwork.h" />
     <ClInclude Include="NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h" />
@@ -167,6 +169,7 @@
     <ClInclude Include="Neurons\INeuron.h" />
     <ClInclude Include="Neurons\InputNeuron.h" />
     <ClInclude Include="Neurons\Neuron.h" />
+    <ClInclude Include="Neurons\NeuronOfRNN.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

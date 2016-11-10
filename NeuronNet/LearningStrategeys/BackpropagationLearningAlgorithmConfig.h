@@ -4,7 +4,7 @@
 #include "..\ErrorFunctions\HalfSquaredEuclidianDistance.h"
 
 namespace neuralNet {
-	class LearningAlgorithmConfig {
+	class BackpropagationLearningAlgorithmConfig {
 	private:
 		float learningRate;
 		int batchSize;
@@ -14,7 +14,7 @@ namespace neuralNet {
 		float minErrorChange;
 		IErrorFunction<float>* errorFunction;
 	public:
-		LearningAlgorithmConfig() {
+		BackpropagationLearningAlgorithmConfig() {
 			//trainer
 			learningRate = 0.1;
 			batchSize = -1;

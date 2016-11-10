@@ -2,18 +2,18 @@
 #include "..\stdafx.h"
 #include "..\LearningStrategeys\ILearningStrategey.h"
 #include"..\NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h"
-#include"LearningAlgorithmConfig.h"
+#include"BackpropagationLearningAlgorithmConfig.h"
 
 namespace neuralNet {
 	class BackpropagationLearningAlgorithm : public ILearningStrategy<IMultilayerNeuralNetwork> {
 	private:
-		LearningAlgorithmConfig _config;
+		BackpropagationLearningAlgorithmConfig _config;
 		std::ofstream _logger;
 
 		void shuffle(vector<int>& arr);
 	public:
 		BackpropagationLearningAlgorithm();
-		BackpropagationLearningAlgorithm(LearningAlgorithmConfig config);
+		BackpropagationLearningAlgorithm(BackpropagationLearningAlgorithmConfig config);
 		~BackpropagationLearningAlgorithm();
 		// ”наследовано через ILearningStrategy
 		virtual void train(IMultilayerNeuralNetwork* network, vector<DataItem<float>>& data) override;
@@ -26,7 +26,7 @@ namespace neuralNet {
 		std::string way(lol.begin(), lol.end() - 1);
 		_logger = std::ofstream(way);
 	}
-	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(LearningAlgorithmConfig config) {
+	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(BackpropagationLearningAlgorithmConfig config) {
 		std::ostringstream ss;
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
 		ss << "logs(data" << (int)seconds << ").log" << std::endl;
