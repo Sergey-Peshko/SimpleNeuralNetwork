@@ -158,6 +158,7 @@
     <ClInclude Include="Layers\Layer.h" />
     <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithm.h" />
     <ClInclude Include="LearningStrategeys\ContrastiveDivergence.h" />
+    <ClInclude Include="LearningStrategeys\ContrastiveDivergenceAlgorithmConfig.h" />
     <ClInclude Include="LearningStrategeys\ILearningStrategey.h" />
     <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithmConfig.h" />
     <ClInclude Include="LearningStrategeys\RestrictedBoltzmannMachines.h" />

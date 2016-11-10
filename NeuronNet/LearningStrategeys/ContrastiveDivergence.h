@@ -1,6 +1,7 @@
 #pragma once
 #include "ILearningStrategey.h"
 #include "..\NeuralNetworks\RecurentNeuralNetwork\IRecurentNeuralNetwork.h"
+#include "ContrastiveDivergenceAlgorithmConfig.h"
 namespace neuralNet {
 	class ContrastiveDivergence : public ILearningStrategy<IRecurentNeuralNetwork> {
 		ContrastiveDivergenceAlgorithmConfig _config;

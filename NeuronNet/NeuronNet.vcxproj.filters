@@ -126,6 +126,9 @@
     <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithmConfig.h">
       <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
+    <ClInclude Include="LearningStrategeys\ContrastiveDivergenceAlgorithmConfig.h">
+      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
