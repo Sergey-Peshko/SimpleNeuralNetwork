@@ -29,7 +29,7 @@ namespace neuralNet {
 		virtual void train(vector<DataItem<float>>& data) override;
 		virtual vector<ILayer*>& HiddenLayers() override;
 
-		virtual ILayer* InutLayer() override;
+		virtual ILayer* InputLayer() override;
 		virtual ILayer* OutputLayer() override;
 	};
 	MLP::MLP(size_t inputDimension, 
@@ -40,7 +40,7 @@ namespace neuralNet {
 		ILearningStrategy<IMultilayerNeuralNetwork>* learningStrategy) :
 		_hiddenLayers(hiddenLayersSizes.size())
 	{
-		_inputLayer = new InputLayer(inputDimension);
+		_inputLayer = new neuralNet::InputLayer(inputDimension);
 
 		if (!hiddenLayersSizes.empty()) {
 			_hiddenLayers[0] = new Layer(inputDimension, hiddenLayersSizes[0], hidden);
@@ -87,7 +87,7 @@ namespace neuralNet {
 		return _hiddenLayers;
 	}
 
-	ILayer* MLP::InutLayer() {
+	ILayer* MLP::InputLayer() {
 		return _inputLayer;
 	}
 	ILayer* MLP::OutputLayer() {

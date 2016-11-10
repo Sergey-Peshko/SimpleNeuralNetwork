@@ -173,7 +173,7 @@ namespace neuralNet {
 									network->OutputLayer()->Neurons()[j]->LastError() *
 									(network->HiddenLayers().size() > 0 ?
 									network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[i]->getLastState() :
-									network->InutLayer()->Neurons()[i]->getLastState());
+									network->InputLayer()->Neurons()[i]->getLastState());
 
 							}
 						}
@@ -216,7 +216,7 @@ namespace neuralNet {
 										network->HiddenLayers()[hiddenLayerIndex]->Neurons()[j]->LastError() *
 										(hiddenLayerIndex > 0 ?
 											network->HiddenLayers()[hiddenLayerIndex - 1]->Neurons()[i]->getLastState() :
-											network->InutLayer()->Neurons()[i]->getLastState());
+											network->InputLayer()->Neurons()[i]->getLastState());
 											//data[trainingIndices[inBatchIndex]].Input()[i]);
 
 								}
@@ -253,6 +253,8 @@ namespace neuralNet {
 					}
 				}
 
+
+				//update synaptic conections
 				for (int neuronIndex = 0;
 					neuronIndex < network->OutputLayer()->Neurons().size();
 					neuronIndex++)

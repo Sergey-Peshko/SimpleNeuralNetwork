@@ -20,7 +20,7 @@ namespace neuralNet {
 			IActivationFunction* out,
 			ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy);
 		// Унаследовано через IRecurentNeuralNetwork
-		virtual ILayer * InutLayer() override;
+		virtual ILayer * InputLayer() override;
 		virtual ILayer * OutputLayer() override;
 		virtual vector<float> calculateOutput(vector<float> inputVector) override;
 		virtual vector<float> calculateInput(vector<float> outputVector) override;
@@ -47,7 +47,7 @@ namespace neuralNet {
 		_learningStrategy->train(this, data);
 	}
 
-	ILayer * neuralNet::OLRNN::InutLayer()
+	ILayer * neuralNet::OLRNN::InputLayer()
 	{
 		return _inputLayer;
 	}
