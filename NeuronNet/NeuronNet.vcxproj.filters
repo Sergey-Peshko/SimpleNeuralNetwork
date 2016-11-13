@@ -108,12 +108,6 @@
     <ClInclude Include="NeuralNetworks\RecurentNeuralNetwork\OLRNN.h">
       <Filter>Заголовочные файлы\NeuralNetworks\RecurentNeuralNetwork</Filter>
     </ClInclude>
-    <ClInclude Include="Layers\InputLayer.h">
-      <Filter>Заголовочные файлы\Layers</Filter>
-    </ClInclude>
-    <ClInclude Include="Neurons\InputNeuron.h">
-      <Filter>Заголовочные файлы\Neurons</Filter>
-    </ClInclude>
     <ClInclude Include="Layers\InvertedLayer.h">
       <Filter>Заголовочные файлы\Layers</Filter>
     </ClInclude>

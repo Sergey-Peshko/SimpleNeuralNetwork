@@ -3,7 +3,6 @@
 #include "IRecurentNeuralNetwork.h"
 #include"..\..\LearningStrategeys\ILearningStrategey.h"
 #include"..\..\Layers\InvertedLayer.h"
-#include "..\..\Layers\InputLayer.h"
 #include "..\..\Layers\Layer.h"
 
 namespace neuralNet {
@@ -19,7 +18,6 @@ namespace neuralNet {
 			IActivationFunction* out,
 			ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy);
 		// Унаследовано через IRecurentNeuralNetwork
-		virtual ILayer * InputLayer() override;
 		virtual ILayer * OutputLayer() override;
 		virtual vector<float> calculateOutput(vector<float> inputVector) override;
 		virtual vector<float> calculateInput(vector<float> outputVector) override;
@@ -44,11 +42,6 @@ namespace neuralNet {
 	void neuralNet::OLRNN::train(vector<DataItem<float>>& data)
 	{
 		_learningStrategy->train(this, data);
-	}
-
-	ILayer * neuralNet::OLRNN::InputLayer()
-	{
-		return nullptr;	//lolkek
 	}
 
 	ILayer * neuralNet::OLRNN::OutputLayer()

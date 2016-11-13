@@ -1,7 +1,6 @@
 #pragma once
 #include"IMultilayerNeuralNetwork.h"
 #include "..\..\Layers\Layer.h"
-#include "..\..\Layers\InputLayer.h"
 #include "..\..\Layers\ILayer.h"
 #include"..\..\LearningStrategeys\ILearningStrategey.h"
 namespace neuralNet {
@@ -9,7 +8,6 @@ namespace neuralNet {
 	private:
 		vector<ILayer*> _hiddenLayers;
 
-		ILayer* _inputLayer;
 		ILayer* _outputLayer;
 		
 		ILearningStrategy<IMultilayerNeuralNetwork>* _learningStrategy;
@@ -29,7 +27,6 @@ namespace neuralNet {
 		virtual void train(vector<DataItem<float>>& data) override;
 		virtual vector<ILayer*>& HiddenLayers() override;
 
-		virtual ILayer* InputLayer() override;
 		virtual ILayer* OutputLayer() override;
 	};
 	MLP::MLP(size_t inputDimension, 
@@ -40,7 +37,6 @@ namespace neuralNet {
 		ILearningStrategy<IMultilayerNeuralNetwork>* learningStrategy) :
 		_hiddenLayers(hiddenLayersSizes.size())
 	{
-		_inputLayer = new neuralNet::InputLayer(inputDimension);
 
 		if (!hiddenLayersSizes.empty()) {
 			_hiddenLayers[0] = new Layer(inputDimension, hiddenLayersSizes[0], hidden);
@@ -66,7 +62,6 @@ namespace neuralNet {
 	}
 	vector<float> MLP::calculateOutput(vector<float> inputVector)
 	{
-		inputVector = _inputLayer->calculate(inputVector);
 		for (size_t i = 0; i < _hiddenLayers.size(); i++) {
 			inputVector = _hiddenLayers[i]->calculate(inputVector);
 		}
@@ -87,9 +82,6 @@ namespace neuralNet {
 		return _hiddenLayers;
 	}
 
-	ILayer* MLP::InputLayer() {
-		return _inputLayer;
-	}
 	ILayer* MLP::OutputLayer() {
 		return _outputLayer;
 	}
