@@ -20,10 +20,10 @@ namespace neuralNet {
 		int epochNumber = 0;
 		_logger << ("CD-k Start learning...") << std::endl;
 
-		vector<float> nablaThresholdsInput(network->InputLayer()->Neurons().size());
+		vector<float> nablaThresholdsInput(network->OutputLayer()->getInputDimension());
 		vector<float> nablaThresholdsOutput(network->OutputLayer()->Neurons().size());
 		vector<vector<float>> nablaWeights(network->OutputLayer()->Neurons().size(), 
-			vector<float>(network->InputLayer()->Neurons().size()));
+			vector<float>(network->OutputLayer()->getInputDimension()));
 		
 
 		do{
@@ -63,22 +63,22 @@ namespace neuralNet {
 								(finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
 								(finishInput[weightIndex]) *
 								network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
-									network->OutputLayer()->Neurons()[neuronIndex]->getLastState())
+									network->OutputLayer()->Neurons()[neuronIndex]->getLastSum())
 								+
 								(finishInput[weightIndex] - prevInput[weightIndex]) *
 								(prevOutput[neuronIndex]) *
-								network->InputLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
-									network->InputLayer()->Neurons()[weightIndex]->getLastState());
+								network->OutputLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
+									network->getInvertedLayer().Neurons()[weightIndex].getLastSum());
 						}
 						nablaThresholdsOutput[neuronIndex] += (finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
 							network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
-								network->OutputLayer()->Neurons()[neuronIndex]->getLastState());
+								network->OutputLayer()->Neurons()[neuronIndex]->getLastSum());
 					}
 					for (int weightIndex = 0; weightIndex < nablaThresholdsInput.size(); weightIndex++) {
 						nablaThresholdsInput[weightIndex] +=
 							(finishInput[weightIndex] - prevInput[weightIndex]) *
-							network->InputLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
-								network->InputLayer()->Neurons()[weightIndex]->getLastState());
+							network->getInvertedLayer().Neurons()[weightIndex].ActivationFunction()->calculateFirstDerivative(
+								network->getInvertedLayer().Neurons()[weightIndex].getLastSum());
 					}
 
 					prevOutput = finishOutput;
