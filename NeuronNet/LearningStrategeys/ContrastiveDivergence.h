@@ -86,6 +86,17 @@ namespace neuralNet {
 				}
 				
 				//меняем синоптические связи
+				for (int i = 0; i < nablaWeights.size(); i++)
+				{
+					for (int j = 0; j < nablaWeights[i].size(); j++)
+					{
+						network->OutputLayer()->Neurons()[i]->Weights()[j] -= _config.getLearningRate() * nablaWeights[i][j];
+					}
+					network->OutputLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsOutput[i];
+				}
+				for (int i = 0; i < nablaThresholdsInput.size(); i++) {
+					network->OutputLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsInput[i];
+				}
 
 			} while (currentIndex < data.size());
 			//вычисляем среднеквадратичную ошибку

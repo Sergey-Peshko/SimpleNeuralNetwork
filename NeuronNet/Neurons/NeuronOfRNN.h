@@ -5,7 +5,7 @@ namespace neuralNet {
 	class NeuronOfRNN {
 	private:
 		vector<float*> weights;
-		float* threshold;
+		float threshold;
 		float lastState;
 		float lastSum;
 		IActivationFunction* activationFunction;
@@ -14,12 +14,11 @@ namespace neuralNet {
 		float calculateSum(const vector<float>& inputVector) ;
 	public:
 		NeuronOfRNN(vector<float*> weights,
-			float* threshold,
 			IActivationFunction* activationFunction);
 		NeuronOfRNN(const NeuronOfRNN& obj);
 		~NeuronOfRNN();
 		 vector<float*>& Weights() ;
-		 float * Threshold() ;
+		 float & Threshold() ;
 		 float activate(const vector<float>& inputVector) ;
 		 float getLastState() ;
 		 float getLastSum() ;
@@ -27,11 +26,9 @@ namespace neuralNet {
 		 float & LastError() ;
 	};
 	NeuronOfRNN::NeuronOfRNN(vector<float*> weights,
-		float* threshold,
 		IActivationFunction* activationFunction)
 	{
 		this->weights = weights;
-		this->threshold = threshold;
 		this->activationFunction = activationFunction->clone();
 	}
 	
@@ -54,7 +51,7 @@ namespace neuralNet {
 		return weights;
 	}
 
-	float * NeuronOfRNN::Threshold()
+	float&  NeuronOfRNN::Threshold()
 	{
 		return threshold;
 	}
@@ -65,7 +62,7 @@ namespace neuralNet {
 		for (size_t i = 0; i < weights.size(); i++) {
 			sum += *(weights[i]) * inputVector[i];
 		}
-		sum -= *threshold;
+		sum -= threshold;
 		lastSum = sum;
 		return sum;
 	}

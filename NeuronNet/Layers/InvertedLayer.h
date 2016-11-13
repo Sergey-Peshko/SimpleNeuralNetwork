@@ -10,7 +10,7 @@ namespace neuralNet {
 		size_t inputDimension;
 	public:
 		InvertedLayer();
-		InvertedLayer(ILayer* input, ILayer* output);
+		InvertedLayer(ILayer* output);
 		InvertedLayer(const InvertedLayer& obj);
 		~InvertedLayer();
 		const vector<float>& calculate(const vector<float>& inputVector);
@@ -21,7 +21,7 @@ namespace neuralNet {
 	InvertedLayer::InvertedLayer() {
 
 	}
-	InvertedLayer::InvertedLayer(ILayer* input, ILayer* output)
+	InvertedLayer::InvertedLayer(ILayer* output)
 	{
 		inputDimension = output->Neurons().size();
 
@@ -30,13 +30,12 @@ namespace neuralNet {
 		vector<float*> wights(inputDimension);
 
 		for (int i = 0; i < neurons.size(); i++) {
-			float* threshold = &(input->Neurons()[i]->Threshold);
 			vector<float*> wights(inputDimension);
 
 			for (int j = 0; j < inputDimension; j++) {
 				wights[j] = &(output->Neurons()[j]->Weights()[i]);
 			}
-			neurons[i] = NeuronOfRNN(wights, threshold, input->Neurons()[i]->ActivationFunction());
+			neurons[i] = NeuronOfRNN(wights, output->Neurons()[i]->ActivationFunction());
 		}
 	}
 	

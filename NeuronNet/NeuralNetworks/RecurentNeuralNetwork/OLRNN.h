@@ -8,7 +8,6 @@
 
 namespace neuralNet {
 	class OLRNN : public IRecurentNeuralNetwork {
-		ILayer* _inputLayer;
 		ILayer* _outputLayer;
 
 		InvertedLayer _invertedLayer;
@@ -32,10 +31,10 @@ namespace neuralNet {
 		size_t outputDimension,
 		IActivationFunction* out,
 		ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy) {
-		_inputLayer = new InputLayer(inputDimension);
+
 		_outputLayer = new Layer(inputDimension, outputDimension, out);
 
-		_invertedLayer = InvertedLayer(_inputLayer, _outputLayer);
+		_invertedLayer = InvertedLayer(_outputLayer);
 	}
 
 	void neuralNet::OLRNN::save(std::string way)
@@ -49,7 +48,7 @@ namespace neuralNet {
 
 	ILayer * neuralNet::OLRNN::InputLayer()
 	{
-		return _inputLayer;
+		return nullptr;	//lolkek
 	}
 
 	ILayer * neuralNet::OLRNN::OutputLayer()
@@ -59,8 +58,6 @@ namespace neuralNet {
 
 	vector<float> neuralNet::OLRNN::calculateOutput(vector<float> inputVector)
 	{
-		inputVector = _inputLayer->calculate(inputVector);
-
 		return _outputLayer->calculate(inputVector);
 	}
 
