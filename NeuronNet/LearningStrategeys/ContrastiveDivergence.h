@@ -12,6 +12,14 @@ namespace neuralNet {
 		// Унаследовано через ILearningStrategy
 		virtual void train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data) override;
 	};
+	ContrastiveDivergence::ContrastiveDivergence() {
+		std::ostringstream ss;
+		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
+		ss << "logsCD(data" << (int)seconds << ").log" << std::endl;
+		std::string lol = ss.str();
+		std::string way(lol.begin(), lol.end() - 1);
+		_logger = std::ofstream(way);
+	}
 	void ContrastiveDivergence::train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data)
 	{
 
@@ -27,8 +35,10 @@ namespace neuralNet {
 		
 
 		do{
-
+			lastError = currentError;
+			int dtStart = clock();
 			//process data set
+			currentError = 0;
 			int currentIndex = 0;
 			do
 			{
@@ -68,7 +78,7 @@ namespace neuralNet {
 								(finishInput[weightIndex] - prevInput[weightIndex]) *
 								(prevOutput[neuronIndex]) *
 								network->OutputLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
-									network->getInvertedLayer().Neurons()[weightIndex].getLastSum());
+									network->getInvertedLayer()->Neurons()[weightIndex].getLastSum());
 						}
 						nablaThresholdsOutput[neuronIndex] += (finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
 							network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
@@ -77,9 +87,12 @@ namespace neuralNet {
 					for (int weightIndex = 0; weightIndex < nablaThresholdsInput.size(); weightIndex++) {
 						nablaThresholdsInput[weightIndex] +=
 							(finishInput[weightIndex] - prevInput[weightIndex]) *
-							network->getInvertedLayer().Neurons()[weightIndex].ActivationFunction()->calculateFirstDerivative(
-								network->getInvertedLayer().Neurons()[weightIndex].getLastSum());
+							network->getInvertedLayer()->Neurons()[weightIndex].ActivationFunction()->calculateFirstDerivative(
+								network->getInvertedLayer()->Neurons()[weightIndex].getLastSum());
 					}
+					//вычисляем среднеквадратичную ошибку
+					currentError += _config.ErrorFunction()->calculate(finishInput, prevInput);
+					currentError += _config.ErrorFunction()->calculate(finishOutput, prevOutput);
 
 					prevOutput = finishOutput;
 					prevInput = finishInput;
@@ -95,11 +108,41 @@ namespace neuralNet {
 					network->OutputLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsOutput[i];
 				}
 				for (int i = 0; i < nablaThresholdsInput.size(); i++) {
-					network->OutputLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsInput[i];
+					network->getInvertedLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsInput[i];
 				}
 
+
+				currentIndex++;
 			} while (currentIndex < data.size());
+			
+			vector<float> startInput = data[currentIndex].Input();
+			vector<float> startOutput = network->calculateOutput(startInput);
+
+			vector<float> finishInput;
+			vector<float> finishOutput;
+
+			vector<float> prevOutput = startOutput;
+			vector<float> prevInput = startInput;
+
 			//вычисляем среднеквадратичную ошибку
+			//выполняем k итераций
+			for (int i = 0; i < data.size(); i++)
+			{
+				for (int i = 0; i < _config.getK(); i++) {
+					finishInput = network->calculateInput(prevOutput);
+					finishOutput = network->calculateOutput(finishInput);
+
+					currentError += _config.ErrorFunction()->calculate(finishInput, prevInput);
+					currentError += _config.ErrorFunction()->calculate(finishOutput, prevOutput);
+
+					prevOutput = finishOutput;
+					prevInput = finishInput;
+				}
+			}
+
+			_logger << "Eposh #" << epochNumber << " finished;" << std::endl
+				<< "current error is " << currentError
+				<< "; it takes: " << (clock() - dtStart) << std::endl;
 
 			epochNumber++;
 		} while (epochNumber < _config.getMaxEpoches() &&

@@ -1,10 +1,12 @@
 #pragma once
 #include "..\stdafx.h"
 #include "..\ActivationFunctions\IActivationFunction.h"
+#include "INeuron.h"
 namespace neuralNet {
-	class NeuronOfRNN {
+	class NeuronOfRNN : public INeuron {
 	private:
 		vector<float*> weights;
+		vector<float> Vweights;
 		float threshold;
 		float lastState;
 		float lastSum;
@@ -13,18 +15,25 @@ namespace neuralNet {
 
 		float calculateSum(const vector<float>& inputVector) ;
 	public:
+		NeuronOfRNN();
 		NeuronOfRNN(vector<float*> weights,
 			IActivationFunction* activationFunction);
 		NeuronOfRNN(const NeuronOfRNN& obj);
 		~NeuronOfRNN();
-		 vector<float*>& Weights() ;
+		 vector<float>& Weights() ;
 		 float & Threshold() ;
 		 float activate(const vector<float>& inputVector) ;
 		 float getLastState() ;
 		 float getLastSum() ;
 		 IActivationFunction * ActivationFunction() ;
 		 float & LastError() ;
+
+		 // Унаследовано через INeuron
+		 virtual INeuron * clone() override;
 	};
+	NeuronOfRNN::NeuronOfRNN() {
+
+	}
 	NeuronOfRNN::NeuronOfRNN(vector<float*> weights,
 		IActivationFunction* activationFunction)
 	{
@@ -46,9 +55,14 @@ namespace neuralNet {
 		delete activationFunction;
 	}
 
-	vector<float*>& NeuronOfRNN::Weights()
+	vector<float>& NeuronOfRNN::Weights()
 	{
-		return weights;
+		vector<float> rez(weights.size());
+		for (int i = 0; i < rez.size(); i++) {
+			rez[i] = *(weights[i]);
+		}
+		Vweights = rez;
+		return Vweights;
 	}
 
 	float&  NeuronOfRNN::Threshold()
@@ -91,5 +105,9 @@ namespace neuralNet {
 	float & NeuronOfRNN::LastError()
 	{
 		return lastError;
+	}
+	INeuron * NeuronOfRNN::clone()
+	{
+		return new NeuronOfRNN(*this);
 	}
 }

@@ -9,17 +9,18 @@ namespace neuralNet {
 	class OLRNN : public IRecurentNeuralNetwork {
 		ILayer* _outputLayer;
 
-		InvertedLayer _invertedLayer;
+		InvertedLayer* _invertedLayer;
 
 		ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy;
 	public:
+		OLRNN();
 		OLRNN(size_t inputDimension,
 			size_t outputDimension,
 			IActivationFunction* out,
 			ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy);
 		// Унаследовано через IRecurentNeuralNetwork
 		virtual ILayer * OutputLayer() override;
-		virtual InvertedLayer& getInvertedLayer() override;
+		virtual InvertedLayer* getInvertedLayer() override;
 		virtual vector<float> calculateOutput(vector<float> inputVector) override;
 		virtual vector<float> calculateInput(vector<float> outputVector) override;
 		virtual void save(std::string way) override;
@@ -27,14 +28,20 @@ namespace neuralNet {
 		
 	};
 
+	OLRNN::OLRNN() {
+
+	}
+
 	OLRNN::OLRNN(size_t inputDimension,
 		size_t outputDimension,
 		IActivationFunction* out,
-		ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy) {
+		ILearningStrategy<IRecurentNeuralNetwork>* learningStrategy) {
 
 		_outputLayer = new Layer(inputDimension, outputDimension, out);
 
-		_invertedLayer = neuralNet::InvertedLayer(_outputLayer);
+		_invertedLayer = new neuralNet::InvertedLayer(_outputLayer);
+
+		_learningStrategy = learningStrategy;
 	}
 
 	void neuralNet::OLRNN::save(std::string way)
@@ -58,9 +65,9 @@ namespace neuralNet {
 
 	vector<float> neuralNet::OLRNN::calculateInput(vector<float> outputVector)
 	{
-		return _invertedLayer.calculate(outputVector);
+		return _invertedLayer->calculate(outputVector);
 	}
-	InvertedLayer& neuralNet::OLRNN::getInvertedLayer() {
+	InvertedLayer* neuralNet::OLRNN::getInvertedLayer() {
 		return  _invertedLayer;
 	}
 }

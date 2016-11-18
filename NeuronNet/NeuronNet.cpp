@@ -8,7 +8,8 @@
 #include"ActivationFunctions\Relu.h"
 #include"ActivationFunctions\Sigmoid.h"
 #include"Data\DataItem.h"
-
+#include "NeuralNetworks\RecurentNeuralNetwork\OLRNN.h"
+#include"LearningStrategeys\ContrastiveDivergence.h";
 using namespace neuralNet;
 
 void print(vector<float> v) {
@@ -20,7 +21,8 @@ void print(vector<float> v) {
 
 int main()
 {
-	MLP mlp(2, { 2 }, 1, new Relu(), new Sigmoid(), new BackpropagationLearningAlgorithm());
+	
+	//MLP mlp(2, { 2 }, 1, new Relu(), new Sigmoid(), new BackpropagationLearningAlgorithm());
 	vector<DataItem<float>> data;
 	data.push_back(DataItem<float>({ 0,0 }, { 0 }));
 	data.push_back(DataItem<float>({ 0,1 }, { 1 }));
@@ -30,12 +32,15 @@ int main()
 	//data.push_back(DataItem<float>({ -1,-2 }, { 1 }));
 	//data.push_back(DataItem<float>({ 2,-1 }, { 1 }));
 	//data.push_back(DataItem<float>({ 2,2 }, { 0 }));
-
+	/*
 	mlp.train(data);
 	print(mlp.calculateOutput({ 0,0 }));
 	print(mlp.calculateOutput({ 0,1 }));
 	print(mlp.calculateOutput({ 1,0 }));
 	print(mlp.calculateOutput({ 1,1 }));
+	*/
+	OLRNN rnn(2,1,new Relu(), new ContrastiveDivergence());
+	rnn.train(data);
     return 0;
 }
 

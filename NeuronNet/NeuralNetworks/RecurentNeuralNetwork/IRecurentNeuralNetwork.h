@@ -8,6 +8,6 @@ namespace neuralNet {
 	class IRecurentNeuralNetwork abstract : public INeuralNetwork {
 	public:
 		virtual vector<float> calculateInput(vector<float> outputVector) = 0;
-		virtual InvertedLayer& getInvertedLayer() = 0;
+		virtual InvertedLayer* getInvertedLayer() = 0;
 	};
 }

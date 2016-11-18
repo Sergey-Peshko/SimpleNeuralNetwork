@@ -1,5 +1,6 @@
 #pragma once
 #include "..\ErrorFunctions\IErrorFunction.h"
+#include "..\ErrorFunctions\HalfSquaredEuclidianDistance.h"
 namespace neuralNet {
 	class ContrastiveDivergenceAlgorithmConfig {
 		float learningRate;
@@ -9,6 +10,16 @@ namespace neuralNet {
 		float minErrorChange;
 		IErrorFunction<float>* errorFunction;
 	public:
+		ContrastiveDivergenceAlgorithmConfig()
+		{
+			learningRate = 0.1;
+			//batchSize = -1;
+		
+			maxEpoches = 150'000;
+			minError = 0.00001;
+			minErrorChange = 0.000'000'000'001;
+			errorFunction = new HalfSquaredEuclidianDistance<float>();
+		}
 		void setLearningRate(float value) {
 			learningRate = value;
 		}
