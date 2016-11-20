@@ -1,7 +1,7 @@
 #pragma once
 #include "ILearningStrategey.h"
 #include "..\NeuralNetworks\RecurentNeuralNetwork\IRecurentNeuralNetwork.h"
-#include "ContrastiveDivergenceAlgorithmConfig.h"
+#include "Configs\ContrastiveDivergenceAlgorithmConfig.h"
 namespace neuralNet {
 	class ContrastiveDivergence : public ILearningStrategy<IRecurentNeuralNetwork> {
 		ContrastiveDivergenceAlgorithmConfig _config;
@@ -9,16 +9,22 @@ namespace neuralNet {
 
 	public:
 		ContrastiveDivergence();
+		ContrastiveDivergence(ContrastiveDivergenceAlgorithmConfig config, std::string name);
 		// ”наследовано через ILearningStrategy
 		virtual void train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data) override;
 	};
 	ContrastiveDivergence::ContrastiveDivergence() {
 		std::ostringstream ss;
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logsCD(data" << (int)seconds << ").log" << std::endl;
-		std::string lol = ss.str();
-		std::string way(lol.begin(), lol.end() - 1);
-		_logger = std::ofstream(way);
+		ss << "logsCD(data" << (int)seconds << ").log";
+		_logger = std::ofstream(ss.str());
+	}
+	ContrastiveDivergence::ContrastiveDivergence(ContrastiveDivergenceAlgorithmConfig config, std::string name) {
+		std::ostringstream ss;
+		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
+		ss << "logsCD(" << "name" << name << " data" << (int)seconds << ").log";
+		_logger = std::ofstream(ss.str());
+		_config = config;
 	}
 	void ContrastiveDivergence::train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data)
 	{

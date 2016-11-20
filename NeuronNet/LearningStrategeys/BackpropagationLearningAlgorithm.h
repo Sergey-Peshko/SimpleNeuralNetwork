@@ -2,7 +2,7 @@
 #include "..\stdafx.h"
 #include "..\LearningStrategeys\ILearningStrategey.h"
 #include"..\NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h"
-#include"BackpropagationLearningAlgorithmConfig.h"
+#include"Configs\BackpropagationLearningAlgorithmConfig.h"
 
 namespace neuralNet {
 	class BackpropagationLearningAlgorithm : public ILearningStrategy<IMultilayerNeuralNetwork> {

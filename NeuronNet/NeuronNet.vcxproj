@@ -156,10 +156,11 @@
     <ClInclude Include="Layers\InvertedLayer.h" />
     <ClInclude Include="Layers\Layer.h" />
     <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithm.h" />
+    <ClInclude Include="LearningStrategeys\Configs\BackpropagationLearningAlgorithmConfig.h" />
+    <ClInclude Include="LearningStrategeys\Configs\ContrastiveDivergenceAlgorithmConfig.h" />
+    <ClInclude Include="LearningStrategeys\Configs\RestrictedBoltzmannMachinesConfig.h" />
     <ClInclude Include="LearningStrategeys\ContrastiveDivergence.h" />
-    <ClInclude Include="LearningStrategeys\ContrastiveDivergenceAlgorithmConfig.h" />
     <ClInclude Include="LearningStrategeys\ILearningStrategey.h" />
-    <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithmConfig.h" />
     <ClInclude Include="LearningStrategeys\RestrictedBoltzmannMachines.h" />
     <ClInclude Include="NeuralNetworks\INeuralNetwork.h" />
     <ClInclude Include="NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h" />

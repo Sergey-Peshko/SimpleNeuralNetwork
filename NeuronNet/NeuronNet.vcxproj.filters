@@ -40,6 +40,9 @@
     <Filter Include="Заголовочные файлы\NeuralNetworks\RecurentNeuralNetwork">
       <UniqueIdentifier>{d394ebe3-a422-49b2-882e-62c687919293}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Заголовочные файлы\LearningStrategeys\Configs">
+      <UniqueIdentifier>{38ef8f85-d16d-489f-a82a-638e0432c5c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -117,11 +120,14 @@
     <ClInclude Include="LearningStrategeys\ContrastiveDivergence.h">
       <Filter>Заголовочные файлы\LearningStrategeys</Filter>
     </ClInclude>
-    <ClInclude Include="LearningStrategeys\BackpropagationLearningAlgorithmConfig.h">
-      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
+    <ClInclude Include="LearningStrategeys\Configs\BackpropagationLearningAlgorithmConfig.h">
+      <Filter>Заголовочные файлы\LearningStrategeys\Configs</Filter>
     </ClInclude>
-    <ClInclude Include="LearningStrategeys\ContrastiveDivergenceAlgorithmConfig.h">
-      <Filter>Заголовочные файлы\LearningStrategeys</Filter>
+    <ClInclude Include="LearningStrategeys\Configs\ContrastiveDivergenceAlgorithmConfig.h">
+      <Filter>Заголовочные файлы\LearningStrategeys\Configs</Filter>
+    </ClInclude>
+    <ClInclude Include="LearningStrategeys\Configs\RestrictedBoltzmannMachinesConfig.h">
+      <Filter>Заголовочные файлы\LearningStrategeys\Configs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
