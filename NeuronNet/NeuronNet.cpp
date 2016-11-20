@@ -41,6 +41,16 @@ int main()
 	*/
 	OLRNN rnn(2,1,new Relu(), new ContrastiveDivergence());
 	rnn.train(data);
+	print(rnn.calculateOutput({ 0,0 }));
+	print(rnn.calculateOutput({ 0,1 }));
+	print(rnn.calculateOutput({ 1,0 }));
+	print(rnn.calculateOutput({ 1,1 }));
+
+	print(rnn.calculateInput(rnn.calculateOutput({ 0,0 })));
+	print(rnn.calculateInput(rnn.calculateOutput({ 0,1 })));
+	print(rnn.calculateInput(rnn.calculateOutput({ 1,0 })));
+	print(rnn.calculateInput(rnn.calculateOutput({ 1,1 })));
+
     return 0;
 }
 

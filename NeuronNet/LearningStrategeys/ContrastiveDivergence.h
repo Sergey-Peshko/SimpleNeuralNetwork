@@ -77,8 +77,10 @@ namespace neuralNet {
 								+
 								(finishInput[weightIndex] - prevInput[weightIndex]) *
 								(prevOutput[neuronIndex]) *
-								network->OutputLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
-									network->getInvertedLayer()->Neurons()[weightIndex].getLastSum());
+								//network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
+								//	network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
+								network->getInvertedLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
+									network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
 						}
 						nablaThresholdsOutput[neuronIndex] += (finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
 							network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
@@ -87,8 +89,8 @@ namespace neuralNet {
 					for (int weightIndex = 0; weightIndex < nablaThresholdsInput.size(); weightIndex++) {
 						nablaThresholdsInput[weightIndex] +=
 							(finishInput[weightIndex] - prevInput[weightIndex]) *
-							network->getInvertedLayer()->Neurons()[weightIndex].ActivationFunction()->calculateFirstDerivative(
-								network->getInvertedLayer()->Neurons()[weightIndex].getLastSum());
+							network->getInvertedLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
+								network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
 					}
 					//вычисляем среднеквадратичную ошибку
 					currentError += _config.ErrorFunction()->calculate(finishInput, prevInput);
@@ -115,19 +117,19 @@ namespace neuralNet {
 				currentIndex++;
 			} while (currentIndex < data.size());
 			
-			vector<float> startInput = data[currentIndex].Input();
-			vector<float> startOutput = network->calculateOutput(startInput);
-
-			vector<float> finishInput;
-			vector<float> finishOutput;
-
-			vector<float> prevOutput = startOutput;
-			vector<float> prevInput = startInput;
-
 			//вычисляем среднеквадратичную ошибку
 			//выполняем k итераций
 			for (int i = 0; i < data.size(); i++)
 			{
+				vector<float> startInput = data[i].Input();
+				vector<float> startOutput = network->calculateOutput(startInput);
+
+				vector<float> finishInput;
+				vector<float> finishOutput;
+
+				vector<float> prevOutput = startOutput;
+				vector<float> prevInput = startInput;
+
 				for (int i = 0; i < _config.getK(); i++) {
 					finishInput = network->calculateInput(prevOutput);
 					finishOutput = network->calculateOutput(finishInput);
