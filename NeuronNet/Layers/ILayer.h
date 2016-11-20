@@ -10,5 +10,6 @@ namespace neuralNet {
 		virtual vector<INeuron*>& Neurons() = 0;
 		virtual size_t getInputDimension() = 0;
 		virtual ILayer* clone() = 0;
+		virtual ~ILayer() {};
 	};
 }

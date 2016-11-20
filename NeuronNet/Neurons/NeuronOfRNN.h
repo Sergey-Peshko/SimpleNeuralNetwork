@@ -15,7 +15,6 @@ namespace neuralNet {
 
 		float calculateSum(const vector<float>& inputVector) ;
 	public:
-		NeuronOfRNN();
 		NeuronOfRNN(vector<float*> weights,
 			IActivationFunction* activationFunction);
 		NeuronOfRNN(const NeuronOfRNN& obj);
@@ -31,9 +30,7 @@ namespace neuralNet {
 		 // Унаследовано через INeuron
 		 virtual INeuron * clone() override;
 	};
-	NeuronOfRNN::NeuronOfRNN() {
 
-	}
 	NeuronOfRNN::NeuronOfRNN(vector<float*> weights,
 		IActivationFunction* activationFunction)
 	{

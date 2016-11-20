@@ -28,31 +28,13 @@ namespace neuralNet {
 		int epochNumber = 0;
 		_logger << ("CD-k Start learning...") << std::endl;
 
-		vector<float> nablaThresholdsInput(network->OutputLayer()->getInputDimension());
-		vector<float> nablaThresholdsOutput(network->OutputLayer()->Neurons().size());
-		vector<vector<float>> nablaWeights(network->OutputLayer()->Neurons().size(), 
-			vector<float>(network->OutputLayer()->getInputDimension()));
-		
-
 		do{
 			lastError = currentError;
 			int dtStart = clock();
 			//process data set
-			currentError = 0;
 			int currentIndex = 0;
 			do
 			{
-				for (int i = 0; i < nablaWeights.size(); i++)
-				{
-					for (int j = 0; j < nablaWeights[i].size(); j++)
-					{
-						nablaWeights[i][j] = 0;
-					}
-					nablaThresholdsOutput[i] = 0;
-				}
-				for (int i = 0; i < nablaThresholdsInput.size(); i++) {
-					nablaThresholdsInput[i] = 0;
-				}
 
 				vector<float> startInput = data[currentIndex].Input();
 				vector<float> startOutput = network->calculateOutput(startInput);
@@ -66,48 +48,35 @@ namespace neuralNet {
 				for (int i = 0; i < _config.getK(); i++) {
 					finishInput = network->calculateInput(prevOutput);
 					finishOutput = network->calculateOutput(finishInput);
-					//прибавляем к наблам
-					for (int neuronIndex = 0; neuronIndex < nablaWeights.size(); neuronIndex++) {
-						for (int weightIndex = 0; weightIndex < nablaWeights[neuronIndex].size(); weightIndex++) {
-							nablaWeights[neuronIndex][weightIndex] +=
-								(finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
-								(finishInput[weightIndex]) *
-								network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
-									network->OutputLayer()->Neurons()[neuronIndex]->getLastSum())
-								+
-								(finishInput[weightIndex] - prevInput[weightIndex]) *
-								(prevOutput[neuronIndex]) *
-								//network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
-								//	network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
-								network->getInvertedLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
-									network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
-						}
-						nablaThresholdsOutput[neuronIndex] -= (finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
-							network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
-								network->OutputLayer()->Neurons()[neuronIndex]->getLastSum());
-					}
-					for (int weightIndex = 0; weightIndex < nablaThresholdsInput.size(); weightIndex++) {
-						nablaThresholdsInput[weightIndex] -=
-							(finishInput[weightIndex] - prevInput[weightIndex]) *
-							network->getInvertedLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
-								network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
-					}
 
 					prevOutput = finishOutput;
 					prevInput = finishInput;
 				}
 				
 				//меняем синоптические связи
-				for (int i = 0; i < nablaWeights.size(); i++)
+				for (int i = 0; i <network->OutputLayer()->Neurons().size(); i++)
 				{
-					for (int j = 0; j < nablaWeights[i].size(); j++)
+					for (int j = 0; j < network->OutputLayer()->Neurons()[i]->Weights().size(); j++)
 					{
-						network->OutputLayer()->Neurons()[i]->Weights()[j] -= _config.getLearningRate() * nablaWeights[i][j];
+						network->OutputLayer()->Neurons()[i]->Weights()[j] -=
+							_config.getLearningRate() * (
+								finishInput[j] * finishOutput[i] - startInput[j] * startOutput[i]
+								);
 					}
-					network->OutputLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsOutput[i];
+					
+					network->OutputLayer()->Neurons()[i]->Threshold() +=
+						_config.getLearningRate() * (
+							finishOutput[i] - startOutput[i]
+							);
+							
 				}
-				for (int i = 0; i < nablaThresholdsInput.size(); i++) {
-					network->getInvertedLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsInput[i];
+				for (int i = 0; i < network->getInvertedLayer()->Neurons().size(); i++) {
+					
+					network->getInvertedLayer()->Neurons()[i]->Threshold() +=
+						_config.getLearningRate() * (
+							finishInput[i] - startInput[i]
+							);
+							
 				}
 
 
@@ -116,6 +85,7 @@ namespace neuralNet {
 			
 			//вычисляем среднеквадратичную ошибку
 			//выполняем k итераций
+			currentError = 0;
 			for (int i = 0; i < data.size(); i++)
 			{
 				vector<float> startInput = data[i].Input();

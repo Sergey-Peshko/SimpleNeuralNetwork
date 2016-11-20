@@ -13,11 +13,14 @@ namespace neuralNet {
 
 		ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy;
 	public:
-		OLRNN();
+		//этот конструктор дл€ проверки
 		OLRNN(size_t inputDimension,
 			size_t outputDimension,
 			IActivationFunction* out,
 			ILearningStrategy<IRecurentNeuralNetwork>* _learningStrategy);
+		OLRNN(ILayer* layer,
+			ILearningStrategy<IRecurentNeuralNetwork>* learningStrategy);
+		~OLRNN();
 		// ”наследовано через IRecurentNeuralNetwork
 		virtual ILayer * OutputLayer() override;
 		virtual InvertedLayer* getInvertedLayer() override;
@@ -27,10 +30,6 @@ namespace neuralNet {
 		virtual void train(vector<DataItem<float>>& data) override;
 		
 	};
-
-	OLRNN::OLRNN() {
-
-	}
 
 	OLRNN::OLRNN(size_t inputDimension,
 		size_t outputDimension,
@@ -43,7 +42,18 @@ namespace neuralNet {
 
 		_learningStrategy = learningStrategy;
 	}
+	OLRNN::OLRNN(ILayer* layer,
+		ILearningStrategy<IRecurentNeuralNetwork>* learningStrategy) {
 
+		_outputLayer = layer;
+
+		_invertedLayer = new neuralNet::InvertedLayer(_outputLayer);
+
+		_learningStrategy = learningStrategy;
+	}
+	OLRNN::~OLRNN() {
+		delete _invertedLayer;
+	}
 	void neuralNet::OLRNN::save(std::string way)
 	{
 	}

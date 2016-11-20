@@ -7,6 +7,7 @@
 #include"LearningStrategeys\BackpropagationLearningAlgorithm.h";
 #include"ActivationFunctions\Relu.h"
 #include"ActivationFunctions\Sigmoid.h"
+#include"ActivationFunctions\Linear.h"
 #include"Data\DataItem.h"
 #include "NeuralNetworks\RecurentNeuralNetwork\OLRNN.h"
 #include"LearningStrategeys\ContrastiveDivergence.h";
@@ -24,10 +25,14 @@ int main()
 	
 	//MLP mlp(2, { 2 }, 1, new Relu(), new Sigmoid(), new BackpropagationLearningAlgorithm());
 	vector<DataItem<float>> data;
-	data.push_back(DataItem<float>({ 0,0 }, { 0 }));
-	data.push_back(DataItem<float>({ 0,1 }, { 1 }));
-	data.push_back(DataItem<float>({ 1,0 }, { 1 }));
-	data.push_back(DataItem<float>({ 1,1 }, { 0 }));
+	data.push_back(DataItem<float>({ 0,0,0 }, { 0 }));
+	data.push_back(DataItem<float>({ 0,0,1 }, { 1 }));
+	data.push_back(DataItem<float>({ 0,1,0 }, { 1 }));
+	data.push_back(DataItem<float>({ 0,1,1 }, { 1 }));
+	data.push_back(DataItem<float>({ 1,0,0 }, { 0 }));
+	data.push_back(DataItem<float>({ 1,0,1 }, { 1 }));
+	data.push_back(DataItem<float>({ 1,1,0 }, { 1 }));
+	data.push_back(DataItem<float>({ 1,1,1 }, { 1 }));
 	//data.push_back(DataItem<float>({ -1,-1 }, { 0 }));
 	//data.push_back(DataItem<float>({ -1,-2 }, { 1 }));
 	//data.push_back(DataItem<float>({ 2,-1 }, { 1 }));
@@ -39,17 +44,14 @@ int main()
 	print(mlp.calculateOutput({ 1,0 }));
 	print(mlp.calculateOutput({ 1,1 }));
 	*/
-	OLRNN rnn(2,1,new Relu(), new ContrastiveDivergence());
+	OLRNN rnn(3,3,new Relu(), new ContrastiveDivergence());
 	rnn.train(data);
-	print(rnn.calculateOutput({ 0,0 }));
-	print(rnn.calculateOutput({ 0,1 }));
-	print(rnn.calculateOutput({ 1,0 }));
-	print(rnn.calculateOutput({ 1,1 }));
+	for(int i=0;i<data.size();i++)
+		print(rnn.calculateOutput(data[i].Input()));
+	
+	for (int i = 0; i<data.size(); i++)
+		print(rnn.calculateInput(rnn.calculateOutput(data[i].Input())));
 
-	print(rnn.calculateInput(rnn.calculateOutput({ 0,0 })));
-	print(rnn.calculateInput(rnn.calculateOutput({ 0,1 })));
-	print(rnn.calculateInput(rnn.calculateOutput({ 1,0 })));
-	print(rnn.calculateInput(rnn.calculateOutput({ 1,1 })));
 
     return 0;
 }

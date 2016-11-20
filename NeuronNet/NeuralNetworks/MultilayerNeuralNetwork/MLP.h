@@ -59,6 +59,7 @@ namespace neuralNet {
 		for (size_t i = 0; i < _hiddenLayers.size(); i++) {
 			delete _hiddenLayers[i];
 		}
+		delete _outputLayer;
 	}
 	vector<float> MLP::calculateOutput(vector<float> inputVector)
 	{
