@@ -18,8 +18,8 @@ namespace neuralNet {
 			//trainer
 			learningRate = 0.1;
 			batchSize = -1;
-			regularizationFactor = 0.000001;
-			//regularizationFactor = 0.0;
+			//regularizationFactor = 0.005;
+			regularizationFactor = 0.0;
 			maxEpoches = 150'000;
 			minError = 0.00001;
 			minErrorChange = 0.000'000'000'001;

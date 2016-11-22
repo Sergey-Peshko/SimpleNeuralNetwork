@@ -24,7 +24,7 @@ void print(vector<float> v) {
 int main()
 {
 	
-	MLP mlp(2, { 4, 3, 2 }, 1, new Relu(), new Sigmoid(), new BackpropagationLearningAlgorithm(), new RestrictedBoltzmannMachines());
+	MLP mlp(2, {4, 3, 2 }, 1, new Relu(), new Sigmoid(), new BackpropagationLearningAlgorithm(), new RestrictedBoltzmannMachines());
 	vector<DataItem<float>> data;
 	/*
 	data.push_back(DataItem<float>({ 0,0,0 }, { 0 }));
@@ -40,10 +40,20 @@ int main()
 	//data.push_back(DataItem<float>({ -1,-2 }, { 1 }));
 	//data.push_back(DataItem<float>({ 2,-1 }, { 1 }));
 	//data.push_back(DataItem<float>({ 2,2 }, { 0 }));
-	data.push_back(DataItem<float>({ 0,0 }, { 0 }));
-	data.push_back(DataItem<float>({ 0,1 }, { 1 }));
-	data.push_back(DataItem<float>({ 1,0 }, { 1 }));
-	data.push_back(DataItem<float>({ 1,1 }, { 0 }));
+	DataItem<float> tmp;
+
+	tmp.Input() = { 0,0 };
+	tmp.Output() = { 0 };
+	data.push_back(tmp);
+	tmp.Input() = { 0,1 };
+	tmp.Output() = { 1 };
+	data.push_back(tmp);
+	tmp.Input() = { 1,0 };
+	tmp.Output() = { 1 };
+	data.push_back(tmp);
+	tmp.Input() = { 1,1 };
+	tmp.Output() = { 0 };
+	data.push_back(tmp);
 	
 	mlp.preTrain(data);
 	mlp.train(data);

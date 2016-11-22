@@ -27,6 +27,7 @@ namespace neuralNet {
 		vector<T>& Output() {
 			return _output;
 		}
+		
 		DataItem(vector<byte> pixels, byte label)
 		{
 			this->_input.resize(pixels.size());
@@ -39,5 +40,6 @@ namespace neuralNet {
 			}
 			this->_output[(int)label] = 1.;
 		}
+		
 	};
 }
