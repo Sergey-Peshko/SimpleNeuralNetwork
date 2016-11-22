@@ -21,18 +21,11 @@ namespace neuralNet {
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm() {
 		std::ostringstream ss;
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logs(data" << (int)seconds << ").log" << std::endl;
-		std::string lol = ss.str();
-		std::string way(lol.begin(), lol.end() - 1);
-		_logger = std::ofstream(way);
+		ss << "logsBPA(data" << (int)seconds << ").log";
+		_logger = std::ofstream(ss.str());
 	}
-	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(BackpropagationLearningAlgorithmConfig config) {
-		std::ostringstream ss;
-		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logs(data" << (int)seconds << ").log" << std::endl;
-		std::string lol = ss.str();
-		std::string way(lol.begin(), lol.end() - 1);
-		_logger = std::ofstream(way);
+	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(BackpropagationLearningAlgorithmConfig config) :
+		BackpropagationLearningAlgorithm() {
 
 		_config = config;
 	}
@@ -58,13 +51,13 @@ namespace neuralNet {
 	}
 	void neuralNet::BackpropagationLearningAlgorithm::train(IMultilayerNeuralNetwork* network, vector<DataItem<float>>& data)
 	{
-		network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[network->HiddenLayers().size() - 1]->Weights()[network->HiddenLayers().size() - 1] = -0.5;
-		network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[network->HiddenLayers().size() - 1]->Weights()[1] = 0.5;
-		network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[1]->Weights()[network->HiddenLayers().size() - 1] = 0.5;
-		network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[1]->Weights()[1] = -0.5;
+		//network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[network->HiddenLayers().size() - 1]->Weights()[network->HiddenLayers().size() - 1] = -0.5;
+		//network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[network->HiddenLayers().size() - 1]->Weights()[1] = 0.5;
+		//network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[1]->Weights()[network->HiddenLayers().size() - 1] = 0.5;
+		//network->HiddenLayers()[network->HiddenLayers().size() - 1]->Neurons()[1]->Weights()[1] = -0.5;
 
-		network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[network->HiddenLayers().size() - 1] = 1;
-		network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[1] = 1;
+		//network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[network->HiddenLayers().size() - 1] = 1;
+		//network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[1] = 1;
 
 		if (_config.getBatchSize() < 1 || _config.getBatchSize() > data.size())
 		{

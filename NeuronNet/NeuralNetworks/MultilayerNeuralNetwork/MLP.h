@@ -11,7 +11,7 @@ namespace neuralNet {
 		ILayer* _outputLayer;
 		
 		ILearningStrategy<IMultilayerNeuralNetwork>* _learningStrategy;
-		//ILearningStrategy<IMultilayerNeuralNetwork>* _pre_learningStrategy;
+		ILearningStrategy<IMultilayerNeuralNetwork>* _preLearningStrategy;
 
 	public:
 		MLP(size_t inputDimension, 
@@ -20,11 +20,19 @@ namespace neuralNet {
 			IActivationFunction* hidden, 
 			IActivationFunction* out,
 			ILearningStrategy<IMultilayerNeuralNetwork>* _learningStrategy);
+		MLP(size_t inputDimension,
+			vector<size_t> hiddenLayersSizes,
+			size_t outputDimension,
+			IActivationFunction* hidden,
+			IActivationFunction* out,
+			ILearningStrategy<IMultilayerNeuralNetwork>* _learningStrategy,
+			ILearningStrategy<IMultilayerNeuralNetwork>* _preLearningStrategy);
 		~MLP();
 		// Унаследовано через IMultilayerNeuralNetwork
 		virtual vector<float> calculateOutput(vector<float> inputVector) override;
 		virtual void save(std::string way) override;
 		virtual void train(vector<DataItem<float>>& data) override;
+		virtual void preTrain(vector<DataItem<float>>& data);
 		virtual vector<ILayer*>& HiddenLayers() override;
 
 		virtual ILayer* OutputLayer() override;
@@ -55,6 +63,21 @@ namespace neuralNet {
 		}
 		_learningStrategy = learningStrategy;
 	}
+	MLP::MLP(size_t inputDimension,
+		vector<size_t> hiddenLayersSizes,
+		size_t outputDimension,
+		IActivationFunction* hidden,
+		IActivationFunction* out,
+		ILearningStrategy<IMultilayerNeuralNetwork>* learningStrategy,
+		ILearningStrategy<IMultilayerNeuralNetwork>* preLearningStrategy) :
+		MLP::MLP(inputDimension,
+			hiddenLayersSizes,
+			outputDimension,
+			hidden,
+			out,
+			learningStrategy) {
+		_preLearningStrategy = preLearningStrategy;
+	}
 	MLP::~MLP() {
 		for (size_t i = 0; i < _hiddenLayers.size(); i++) {
 			delete _hiddenLayers[i];
@@ -77,7 +100,9 @@ namespace neuralNet {
 	{
 		_learningStrategy->train(this, data);
 	}
-
+	void MLP::preTrain(vector<DataItem<float>>& data) {
+		_preLearningStrategy->train(this, data);
+	}
 	vector<ILayer*>& MLP::HiddenLayers()
 	{
 		return _hiddenLayers;

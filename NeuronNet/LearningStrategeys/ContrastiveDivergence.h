@@ -9,6 +9,7 @@ namespace neuralNet {
 
 	public:
 		ContrastiveDivergence();
+		ContrastiveDivergence(std::string name);
 		ContrastiveDivergence(ContrastiveDivergenceAlgorithmConfig config, std::string name);
 		// ”наследовано через ILearningStrategy
 		virtual void train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data) override;
@@ -25,6 +26,12 @@ namespace neuralNet {
 		ss << "logsCD(" << "name" << name << " data" << (int)seconds << ").log";
 		_logger = std::ofstream(ss.str());
 		_config = config;
+	}
+	ContrastiveDivergence::ContrastiveDivergence(std::string name) {
+		std::ostringstream ss;
+		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
+		ss << "logsCD(" << "name" << name << " data" << (int)seconds << ").log";
+		_logger = std::ofstream(ss.str());
 	}
 	void ContrastiveDivergence::train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data)
 	{
