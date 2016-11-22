@@ -25,3 +25,10 @@
 
 using std::vector;
 using std::ostream;
+using std::string;
+using std::ifstream;
+using std::ios;
+using std::cout;
+using std::endl;
+
+typedef unsigned char byte;

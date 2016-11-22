@@ -150,6 +150,7 @@
     <ClInclude Include="ActivationFunctions\Relu.h" />
     <ClInclude Include="ActivationFunctions\Sigmoid.h" />
     <ClInclude Include="Data\DataItem.h" />
+    <ClInclude Include="Data\MNISTReader.h" />
     <ClInclude Include="ErrorFunctions\HalfSquaredEuclidianDistance.h" />
     <ClInclude Include="ErrorFunctions\IErrorFunction.h" />
     <ClInclude Include="Layers\ILayer.h" />

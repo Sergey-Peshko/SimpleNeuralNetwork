@@ -129,6 +129,9 @@
     <ClInclude Include="LearningStrategeys\Configs\RestrictedBoltzmannMachinesConfig.h">
       <Filter>Заголовочные файлы\LearningStrategeys\Configs</Filter>
     </ClInclude>
+    <ClInclude Include="Data\MNISTReader.h">
+      <Filter>Заголовочные файлы\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
