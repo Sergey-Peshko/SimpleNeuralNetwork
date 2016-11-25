@@ -7,6 +7,7 @@ namespace neuralNet {
 	private:
 		vector<T> _input;
 		vector<T> _output;
+		
 	public:
 		DataItem() {
 			
@@ -28,11 +29,11 @@ namespace neuralNet {
 			return _output;
 		}
 		
-		DataItem(vector<byte> pixels, byte label)
+		DataItem(vector<float> pixels, byte label)
 		{
 			this->_input.resize(pixels.size());
 			for (int i = 0; i < pixels.size(); i++) {
-				this->_input[i] = pixels[i]/255.;
+				this->_input[i] = pixels[i];
 			}
 			this-> _output.resize(10);
 			for (int i = 0; i < 10; i++) {

@@ -13,9 +13,8 @@ namespace neuralNet {
 		ContrastiveDivergenceAlgorithmConfig()
 		{
 			learningRate = 0.1;
-			//batchSize = -1;
 			k = 1;
-			maxEpoches = 50'000;
+			maxEpoches = 50;
 			minError = 0.00001;
 			minErrorChange = 0.000'000'000'001;
 			errorFunction = new HalfSquaredEuclidianDistance<float>();

@@ -21,8 +21,9 @@ namespace neuralNet {
 		}
 		int ReadByte(ifstream& is)
 		{
-			char buff[1];
-			is.read(buff, 1);
+			unsigned char buff[1];
+			is.read(reinterpret_cast<char*>(buff), 1);
+			
 			return buff[0];
 		}
 
@@ -43,13 +44,13 @@ namespace neuralNet {
 			return res;
 		}
 	public:
-		vector<DataItem<float>> LoadData(string pixelFile, string labelFile, int numImages = 60000)
+		vector<DataItem<float>> LoadData(string pixelFile, string labelFile, int numImages = 60'000)
 		{
 			// Load MNIST training set of 60,000 images into memory
 
 			vector<DataItem<float>> result(numImages);
 
-			vector<byte> pixels(784);
+			vector<float> pixels(784);
 
 
 			ifstream brImages(pixelFile, ios::binary);
@@ -84,7 +85,7 @@ namespace neuralNet {
 			{
 				for (int i = 0; i < 784; ++i) // get 28x28 pixel values
 				{
-					pixels[i] = ReadByte(brImages);
+					pixels[i] = (float)ReadByte(brImages)/255.;
 				}
 
 				byte lbl = ReadByte(brLabels); // get the label
