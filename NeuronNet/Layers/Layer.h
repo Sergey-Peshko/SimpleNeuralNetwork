@@ -91,7 +91,7 @@ namespace neuralNet {
 
 	string Layer::toString() {
 		ostringstream rez;
-
+		rez.precision(32);
 		rez << neurons.size() << ' '
 			<< inputDimension << ' ';
 		for (int i = 0; i < neurons.size(); i++) {
