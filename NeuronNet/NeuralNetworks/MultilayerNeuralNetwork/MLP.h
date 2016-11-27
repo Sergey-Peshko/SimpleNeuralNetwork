@@ -3,6 +3,10 @@
 #include "..\..\Layers\Layer.h"
 #include "..\..\Layers\ILayer.h"
 #include"..\..\LearningStrategeys\ILearningStrategey.h"
+#include"..\..\LearningStrategeys\BackpropagationLearningAlgorithm.h"
+#include"..\..\LearningStrategeys\RestrictedBoltzmannMachines.h"
+#include"..\..\ActivationFunctions\Relu.h"
+#include"..\..\ActivationFunctions\Sigmoid.h"
 namespace neuralNet {
 	class MLP : public IMultilayerNeuralNetwork {
 	private:
@@ -14,6 +18,7 @@ namespace neuralNet {
 		ILearningStrategy<IMultilayerNeuralNetwork>* _preLearningStrategy;
 
 	public:
+		MLP(){}
 		MLP(size_t inputDimension, 
 			vector<size_t> hiddenLayersSizes,
 			size_t outputDimension,
@@ -27,7 +32,15 @@ namespace neuralNet {
 			IActivationFunction* out,
 			ILearningStrategy<IMultilayerNeuralNetwork>* _learningStrategy,
 			ILearningStrategy<IMultilayerNeuralNetwork>* _preLearningStrategy);
+		MLP::MLP(vector<ILayer*> hidden,
+			ILayer* out);
 		~MLP();
+		
+		void open(std::string way);
+		void setLearningStrategy(ILearningStrategy<IMultilayerNeuralNetwork>* learningStrategy);
+		void setPreLearningStrategy(ILearningStrategy<IMultilayerNeuralNetwork>* preLearningStrategy);
+		
+
 		// Унаследовано через IMultilayerNeuralNetwork
 		virtual vector<float> calculateOutput(vector<float> inputVector) override;
 		virtual void save(std::string way) override;
@@ -63,6 +76,14 @@ namespace neuralNet {
 		}
 		_learningStrategy = learningStrategy;
 	}
+
+	MLP::MLP(vector<ILayer*> hidden,
+		ILayer* out) :
+		_hiddenLayers(hidden),
+		_outputLayer(out)
+	{
+	}
+
 	MLP::MLP(size_t inputDimension,
 		vector<size_t> hiddenLayersSizes,
 		size_t outputDimension,
@@ -94,6 +115,58 @@ namespace neuralNet {
 
 	void MLP::save(std::string way)
 	{
+		ofstream os(way);
+		os << _hiddenLayers.size() << endl;
+		for (int i = 0; i < _hiddenLayers.size(); i++) {
+			os << _hiddenLayers[i]->toString() << endl;
+		}
+
+		os << _outputLayer->toString() << endl;
+	}
+	
+	void MLP::open(std::string way)
+	{
+		ifstream is(way);
+		int hiddenLayersSize;
+		is >> hiddenLayersSize;
+		_hiddenLayers.resize(hiddenLayersSize);
+
+		for (int i = 0; i < _hiddenLayers.size(); i++) {
+			int neurons_size;
+			int input_demension;
+			is >> neurons_size;
+			is >> input_demension;
+			vector<vector<float>> w(neurons_size, vector<float>(input_demension));
+			vector<float> t(neurons_size);
+			for (int i = 0; i < neurons_size; i++) {
+				for (int j = 0; j < input_demension; j++) {
+					is >> w[i][j];
+				}
+				is >> t[i];
+			}
+
+			_hiddenLayers[i] = new Layer(w, t, new Relu());
+		}
+
+		int neurons_size;
+		int input_demension;
+		is >> neurons_size;
+		is >> input_demension;
+		vector<vector<float>> w(neurons_size, vector<float>(input_demension));
+		vector<float> t(neurons_size);
+		for (int i = 0; i < neurons_size; i++) {
+			for (int j = 0; j < input_demension; j++) {
+				is >> w[i][j];
+			}
+			is >> t[i];
+		}
+		_outputLayer = new Layer(w, t, new Sigmoid());
+	}
+	void MLP::setLearningStrategy(ILearningStrategy<IMultilayerNeuralNetwork>* learningStrategy) {
+		_learningStrategy = learningStrategy;
+	}
+	void MLP::setPreLearningStrategy(ILearningStrategy<IMultilayerNeuralNetwork>* preLearningStrategy) {
+		_preLearningStrategy = preLearningStrategy;
 	}
 
 	void MLP::train(vector<DataItem<float>>& data)

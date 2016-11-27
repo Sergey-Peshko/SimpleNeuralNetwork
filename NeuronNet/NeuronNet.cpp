@@ -40,34 +40,10 @@ void show(DataItem<float> data) {
 
 int main()
 {
-	//Compare({ 0, (float)0.5, (float)0.3 }, { 0,1,0 });
-	/*
-	std::mt19937 generator((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-	float board = 1. / sqrtf(10);
-	std::uniform_real_distribution<float> urd(-board, std::nextafter(board, FLT_MAX));
-	for (int i = 0; i < 10; i++) {
-		cout << urd(generator) << endl;
-	}
-	system("pause");
-	*/
-
 	vector<DataItem<float>> data;
-	MNISTReader rd;
-	data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
+	//MNISTReader rd;
+	//data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
 	
-	/*
-	cout.precision(1);
-	while (true) {
-		system("pause");
-		system("cls");
-		int i;
-		std::cin >> i;
-		show(data[i]);
-		
-		if (i == -1)
-			break;
-	}
-	*/
 	/*
 	data.push_back(DataItem<float>({ 0,0,0 }, { 0 }));
 	data.push_back(DataItem<float>({ 0,0,1 }, { 1 }));
@@ -78,11 +54,6 @@ int main()
 	data.push_back(DataItem<float>({ 1,1,0 }, { 1 }));
 	data.push_back(DataItem<float>({ 1,1,1 }, { 1 }));
 	*/
-	//data.push_back(DataItem<float>({ -1,-1 }, { 0 }));
-	//data.push_back(DataItem<float>({ -1,-2 }, { 1 }));
-	//data.push_back(DataItem<float>({ 2,-1 }, { 1 }));
-	//data.push_back(DataItem<float>({ 2,2 }, { 0 }));
-	/*
 	DataItem<float> tmp;
 
 	tmp.Input() = { 0,0 };
@@ -97,24 +68,24 @@ int main()
 	tmp.Input() = { 1,1 };
 	tmp.Output() = { 0 };
 	data.push_back(tmp);
-	*/
 	
-	while (true) {
-		MLP mlp(784, { 228, 36 }, 10, new Relu(), new Sigmoid(),
+	MLP mlp(2, { 2 }, 1, new Relu(), new Sigmoid(),
 			new BackpropagationLearningAlgorithm()
 		//	, new RestrictedBoltzmannMachines()
 		);
 		//mlp.preTrain(data);
-		mlp.train(data);
-		
-		/*
-		print(mlp.calculateOutput({ 0,0 }));
-		print(mlp.calculateOutput({ 0,1 }));
-		print(mlp.calculateOutput({ 1,0 }));
-		print(mlp.calculateOutput({ 1,1 }));
-		*/
-	}
-	
+	mlp.save("XOR.txt");
+
+	MLP mlp2;
+	mlp2.open("XOR.txt");
+	mlp2.save("XOR2.txt");
+
+	/*
+	print(mlp.calculateOutput({ 0,0 }));
+	print(mlp.calculateOutput({ 0,1 }));
+	print(mlp.calculateOutput({ 1,0 }));
+	print(mlp.calculateOutput({ 1,1 }));
+	*/
 
     return 0;
 }

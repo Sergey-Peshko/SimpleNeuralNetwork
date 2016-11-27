@@ -16,6 +16,8 @@ namespace neuralNet {
 			std::mt19937& generator, 
 			std::uniform_real_distribution<float>& urd,
 			IActivationFunction* activationFunction);
+		Neuron(vector<float> weights, float threshold,
+			IActivationFunction* activationFunction);
 		Neuron(const Neuron& obj);
 		~Neuron();
 		// Унаследовано через INeuron
@@ -36,6 +38,12 @@ namespace neuralNet {
 		for (size_t i = 0; i < weightsSize; i++) {
 			weights[i] = urd(generator);
 		}
+		this->activationFunction = activationFunction->clone();
+	}
+	Neuron::Neuron(vector<float> weights, float threshold,
+		IActivationFunction* activationFunction) {
+		this->threshold = threshold;
+		this->weights = weights;
 		this->activationFunction = activationFunction->clone();
 	}
 	Neuron::Neuron(const Neuron& obj) :

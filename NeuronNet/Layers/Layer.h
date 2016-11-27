@@ -10,6 +10,7 @@ namespace neuralNet {
 		size_t inputDimension;
 	public:
 		Layer(size_t inputDimension,size_t neuronsSize, IActivationFunction* activationFunction);
+		Layer(vector<vector<float>> w, vector<float> thresholds, IActivationFunction* activationFunction);
 		Layer(const Layer& obj);
 		~Layer();
 		// Унаследовано через ILayer
@@ -18,6 +19,7 @@ namespace neuralNet {
 		virtual vector<INeuron*>& Neurons() override;
 		virtual size_t getInputDimension() override;
 		virtual ILayer* clone() override;
+		virtual string toString() override;
 	};
 	Layer::Layer(size_t inputDimension, 
 		size_t neuronsSize, 
@@ -32,6 +34,19 @@ namespace neuralNet {
 
 		for (size_t i = 0; i < neuronsSize; i++) {
 			neurons[i] = new Neuron(inputDimension, generator, urd, activationFunction);
+		}
+	}
+	Layer::Layer(vector<vector<float>> w, vector<float> thresholds, IActivationFunction* activationFunction) :
+		neurons(w.size()),
+		lastOut(w.size())
+	{
+		if (!w.empty())
+			inputDimension = w[0].size();
+		else
+			cout << "Error" << endl;
+
+		for (int i = 0; i < w.size(); i++) {
+			neurons[i] = new Neuron(w[i], thresholds[i], activationFunction);
 		}
 	}
 	Layer::Layer(const Layer& obj) :
@@ -72,5 +87,20 @@ namespace neuralNet {
 	}
 	ILayer* Layer::clone() {
 		return new Layer(*this);
+	}
+
+	string Layer::toString() {
+		ostringstream rez;
+
+		rez << neurons.size() << ' '
+			<< inputDimension << ' ';
+		for (int i = 0; i < neurons.size(); i++) {
+			for (int j = 0; j < inputDimension; j++) {
+				rez << neurons[i]->Weights()[j] << ' ';
+			}
+			rez << neurons[i]->Threshold() << ' ';
+		}
+
+		return rez.str();
 	}
 }

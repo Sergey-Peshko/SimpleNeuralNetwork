@@ -30,5 +30,7 @@ using std::ifstream;
 using std::ios;
 using std::cout;
 using std::endl;
+using std::ostringstream;
+using std::ofstream;
 
 typedef unsigned char byte;

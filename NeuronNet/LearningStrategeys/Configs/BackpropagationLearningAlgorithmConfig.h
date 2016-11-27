@@ -16,8 +16,8 @@ namespace neuralNet {
 	public:
 		BackpropagationLearningAlgorithmConfig() {
 			learningRate = 0.1;
-			batchSize = 100;
-			regularizationFactor = 0.005;	//0.005
+			batchSize = 1;
+			regularizationFactor = 0.0;	//0.005
 			maxEpoches = 50;
 			minError = 0.00001;
 			minErrorChange = 0.000'000'000'001;

@@ -25,8 +25,6 @@ namespace neuralNet {
 		BackpropagationLearningAlgorithmConfig _config;
 		std::ofstream _logger;
 
-		vector<DataItem<float>> test;
-
 		void shuffle(vector<int>& arr);
 	public:
 		BackpropagationLearningAlgorithm();
@@ -40,9 +38,6 @@ namespace neuralNet {
 		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
 		ss << "logsBPA(data" << (int)seconds << ").log";
 		_logger = std::ofstream(ss.str());
-
-		MNISTReader rd;
-		test = rd.LoadData("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10'000);
 	}
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(BackpropagationLearningAlgorithmConfig config) :
 		BackpropagationLearningAlgorithm() {
@@ -78,6 +73,9 @@ namespace neuralNet {
 
 		//network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[network->HiddenLayers().size() - 1] = 1;
 		//network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[1] = 1;
+
+		MNISTReader rd;
+		vector<DataItem<float>> test = rd.LoadData("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10'000);
 
 		if (_config.getBatchSize() < 1 || _config.getBatchSize() > data.size())
 		{

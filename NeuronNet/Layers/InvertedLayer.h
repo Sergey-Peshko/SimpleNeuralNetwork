@@ -17,6 +17,9 @@ namespace neuralNet {
 		vector<INeuron*>& Neurons();
 		size_t getInputDimension() ;
 		ILayer* clone();
+
+		// Унаследовано через ILayer
+		virtual string toString() override;
 	};
 	InvertedLayer::InvertedLayer(ILayer* output)
 	{
@@ -73,5 +76,9 @@ namespace neuralNet {
 	}
 	ILayer* InvertedLayer::clone() {
 		return new InvertedLayer(*this);
+	}
+	string InvertedLayer::toString()
+	{
+		return string();
 	}
 }
