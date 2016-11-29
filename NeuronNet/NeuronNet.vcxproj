@@ -171,6 +171,9 @@
     <ClInclude Include="Neurons\INeuron.h" />
     <ClInclude Include="Neurons\Neuron.h" />
     <ClInclude Include="Neurons\NeuronOfRNN.h" />
+    <ClInclude Include="OutputInterpretators\IOutputInterpretatorLogic.h" />
+    <ClInclude Include="OutputInterpretators\MNISTInterpretatorLogic.h" />
+    <ClInclude Include="OutputInterpretators\XORInterpretatorLogic.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>

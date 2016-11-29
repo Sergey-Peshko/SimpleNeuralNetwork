@@ -11,8 +11,12 @@
 #include"Data\DataItem.h"
 #include "NeuralNetworks\RecurentNeuralNetwork\OLRNN.h"
 #include"LearningStrategeys\ContrastiveDivergence.h";
+#include"LearningStrategeys\Configs\ContrastiveDivergenceAlgorithmConfig.h"
 #include "LearningStrategeys\RestrictedBoltzmannMachines.h"
 #include"Data\MNISTReader.h"
+#include"LearningStrategeys\Configs\BackpropagationLearningAlgorithmConfig.h"
+#include"OutputInterpretators\XORInterpretatorLogic.h"
+#include"OutputInterpretators\MNISTInterpretatorLogic.h"
 
 #include <iomanip>
 using namespace neuralNet;
@@ -40,20 +44,12 @@ void show(DataItem<float> data) {
 
 int main()
 {
-	vector<DataItem<float>> data;
-	//MNISTReader rd;
-	//data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
 	
-	/*
-	data.push_back(DataItem<float>({ 0,0,0 }, { 0 }));
-	data.push_back(DataItem<float>({ 0,0,1 }, { 1 }));
-	data.push_back(DataItem<float>({ 0,1,0 }, { 1 }));
-	data.push_back(DataItem<float>({ 0,1,1 }, { 1 }));
-	data.push_back(DataItem<float>({ 1,0,0 }, { 0 }));
-	data.push_back(DataItem<float>({ 1,0,1 }, { 1 }));
-	data.push_back(DataItem<float>({ 1,1,0 }, { 1 }));
-	data.push_back(DataItem<float>({ 1,1,1 }, { 1 }));
-	*/
+
+
+	vector<DataItem<float>> data;
+	
+	
 	DataItem<float> tmp;
 
 	tmp.Input() = { 0,0 };
@@ -68,24 +64,86 @@ int main()
 	tmp.Input() = { 1,1 };
 	tmp.Output() = { 0 };
 	data.push_back(tmp);
-	
-	MLP mlp(2, { 2 }, 1, new Relu(), new Sigmoid(),
-			new BackpropagationLearningAlgorithm()
-		//	, new RestrictedBoltzmannMachines()
-		);
-		//mlp.preTrain(data);
-	mlp.save("XOR.txt");
-
-	MLP mlp2;
-	mlp2.open("XOR.txt");
-	mlp2.save("XOR2.txt");
-
 	/*
+	OLRNN rnn(2, 2, new Relu(), new ContrastiveDivergence());
+	rnn.train(data);
+
+	for (int i = 0; i < data.size(); i++)
+		print(rnn.calculateInput(rnn.calculateOutput(data[i].Input())));
+		*/
+	
+	BackpropagationLearningAlgorithmConfig bpaXOR;
+	bpaXOR.setBatchSize(1);
+	bpaXOR.setLearningRate(0.1);
+	bpaXOR.setMaxEpoches(150'000);
+	bpaXOR.setMinError(0.000'01);
+	bpaXOR.setMinErrorChange(0.000'000'000'001);
+	bpaXOR.setRegulaizationFactor(0.);
+	bpaXOR.setTestSetError(0.0);
+	bpaXOR.setTestSet(data);
+	bpaXOR.setOutputInterpretatorLogic(new XORInterpretatorLogic());
+	bpaXOR.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+
+	ContrastiveDivergenceAlgorithmConfig cdXOR;
+	cdXOR.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+	cdXOR.setK(1);
+	cdXOR.setLearningRate(0.1);
+	cdXOR.setMaxEpoches(150'000);
+	cdXOR.setMinError(0.000'01);
+	cdXOR.setMinErrorChange(0.000'000'000'001);
+
+	MLP mlp(2, { 2 }, 1, new Relu(), new Sigmoid(),
+		new BackpropagationLearningAlgorithm(bpaXOR)
+		, new RestrictedBoltzmannMachines(cdXOR)
+	);
+	//mlp.save("tmp.txt");
+	mlp.open("tmp.txt");
+	
+	mlp.preTrain(data);
+	mlp.train(data);
+
 	print(mlp.calculateOutput({ 0,0 }));
 	print(mlp.calculateOutput({ 0,1 }));
 	print(mlp.calculateOutput({ 1,0 }));
 	print(mlp.calculateOutput({ 1,1 }));
+
+	cout << endl;
+
+	mlp.open("tmp.txt");
+	//mlp.setLearningStrategy(new BackpropagationLearningAlgorithm(bpaXOR));
+	mlp.train(data);
+
+	print(mlp.calculateOutput({ 0,0 }));
+	print(mlp.calculateOutput({ 0,1 }));
+	print(mlp.calculateOutput({ 1,0 }));
+	print(mlp.calculateOutput({ 1,1 }));
+	
+	/*
+	//MNISTReader rd;
+	//data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
+
+	BackpropagationLearningAlgorithmConfig bpaMNIST;
+	bpaMNIST.setBatchSize(1);
+	bpaMNIST.setLearningRate(0.1);
+	bpaMNIST.setMaxEpoches(20);
+	bpaMNIST.setMinError(0.000'01);
+	bpaMNIST.setMinErrorChange(0.000'000'000'001);
+	bpaMNIST.setRegulaizationFactor(0.0);
+	bpaMNIST.setTestSetError(0.001);
+	vector<DataItem<float>> test = rd.LoadData("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10'000);
+	bpaMNIST.setTestSet(test);
+	bpaMNIST.setOutputInterpretatorLogic(new MNISTInterpretatorLogic());
+	bpaMNIST.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+
+	ContrastiveDivergenceAlgorithmConfig cdMNIST;
+	cdMNIST.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+	cdMNIST.setK(1);
+	cdMNIST.setLearningRate(0.001);
+	cdMNIST.setMaxEpoches(50);
+	cdMNIST.setMinError(0.000'01);
+	cdMNIST.setMinErrorChange(0.000'000'000'001);
 	*/
+	
 
     return 0;
 }

@@ -43,6 +43,9 @@
     <Filter Include="Заголовочные файлы\LearningStrategeys\Configs">
       <UniqueIdentifier>{38ef8f85-d16d-489f-a82a-638e0432c5c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Заголовочные файлы\OutputInterpretators">
+      <UniqueIdentifier>{b13a07a5-5117-41e9-8c34-66a6a50da0ae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -131,6 +134,15 @@
     </ClInclude>
     <ClInclude Include="Data\MNISTReader.h">
       <Filter>Заголовочные файлы\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputInterpretators\IOutputInterpretatorLogic.h">
+      <Filter>Заголовочные файлы\OutputInterpretators</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputInterpretators\MNISTInterpretatorLogic.h">
+      <Filter>Заголовочные файлы\OutputInterpretators</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputInterpretators\XORInterpretatorLogic.h">
+      <Filter>Заголовочные файлы\OutputInterpretators</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

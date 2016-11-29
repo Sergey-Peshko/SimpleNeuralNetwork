@@ -4,20 +4,7 @@
 #include"..\NeuralNetworks\MultilayerNeuralNetwork\IMultilayerNeuralNetwork.h"
 #include"Configs\BackpropagationLearningAlgorithmConfig.h"
 #include "..\Data\MNISTReader.h"
-bool Compare(vector<float> rez, vector<float> et) {
-	if (rez.size() != et.size()) {
-		cout << "lol compare" << endl;
-	}
-	int max_index = 0;
-	for (int i = 0; i < et.size(); i++) {
-		if (rez[i] > rez[max_index])
-			max_index = i;
-	}
-	if (et[max_index] == 1.)
-		return true;
-	else
-		return false;
-}
+
 
 namespace neuralNet {
 	class BackpropagationLearningAlgorithm : public ILearningStrategy<IMultilayerNeuralNetwork> {
@@ -74,15 +61,17 @@ namespace neuralNet {
 		//network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[network->HiddenLayers().size() - 1] = 1;
 		//network->OutputLayer()->Neurons()[network->HiddenLayers().size() - 1]->Weights()[1] = 1;
 
-		MNISTReader rd;
-		vector<DataItem<float>> test = rd.LoadData("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10'000);
+		//MNISTReader rd;
+		//vector<DataItem<float>> test = rd.LoadData("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10'000);
 
 		if (_config.getBatchSize() < 1 || _config.getBatchSize() > data.size())
 		{
 			_config.setBatchSize(data.size());
 		}
-		float currentError = FLT_MAX;
+	
 		float currRegError;
+		float currentTestSetError;
+		float currentError = FLT_MAX;
 		float lastError = 0;
 		int epochNumber = 0;
 		_logger << ("BPA Start learning...") << std::endl;
@@ -169,7 +158,7 @@ namespace neuralNet {
 						for (int j = 0; j < network->OutputLayer()->Neurons().size(); j++)
 						{
 							network->OutputLayer()->Neurons()[j]->LastError() =
-								_config.ErrorFunction()->calculatePartialDerivaitve(
+								_config.getErrorFunction()->calculatePartialDerivaitve(
 									data[trainingIndices[inBatchIndex]].Output(),
 									realOutput, j) *
 								network->OutputLayer()->Neurons()[j]->ActivationFunction()->
@@ -299,7 +288,7 @@ namespace neuralNet {
 			for (int i = 0; i < data.size(); i++)
 			{
 				vector<float> realOutput = network->calculateOutput(data[i].Input());
-				currentError += _config.ErrorFunction()->calculate(data[i].Output(), realOutput);
+				currentError += _config.getErrorFunction()->calculate(data[i].Output(), realOutput);
 			}
 			//regularization term
 			
@@ -336,29 +325,34 @@ namespace neuralNet {
 				<< " current regularization error is " << currRegError
 				<< " Summary error is " << currentError + currRegError
 				<< "; it takes: " << (clock() - dtStart) << std::endl;
-			
+			/*
 			std::cout << "Eposh #" << epochNumber << std::endl
 				<< " finished; current error is " << currentError
 				<< " current regularization error is " << currRegError
 				<< " Summary error is " << currentError + currRegError
 				<< "; it takes: " << (clock() - dtStart) << std::endl;
+				*/
 
 			currentError += currRegError;
 
 
 
 		
-
+			
 			int count = 0;
-			for (int i = 0; i < test.size(); i++) {
-				vector<float> tmp = network->calculateOutput(test[i].Input());
-				if (Compare(tmp, test[i].Output()))
+			for (int i = 0; i < _config.getTestSet().size(); i++) {
+				vector<float> tmp = network->calculateOutput(_config.getTestSet()[i].Input());
+				if (_config.getOutputInterpretatorLogic()->compare(tmp, _config.getTestSet()[i].Output()))
 					count++;
 			}
-			cout << "Test error: " << (float)count / (float)test.size() << endl;
+			currentTestSetError = 1 - (float)count / (float)_config.getTestSet().size();
+			_logger << "TestSet error: " << currentTestSetError << endl;
+			//cout << "Test error: " << (float)count / (float)test.size() << endl;
+			
 
 		} while (epochNumber < _config.getMaxEpoches() &&
 			currentError > _config.getMinError() &&
-			abs(currentError - lastError) > _config.getMinErrorChange());
+			abs(currentError - lastError) > _config.getMinErrorChange() &&
+			_config.getTestSetError() < currentTestSetError);
 	}
 }

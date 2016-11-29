@@ -14,7 +14,7 @@ namespace neuralNet {
 		{
 			learningRate = 0.1;
 			k = 1;
-			maxEpoches = 50;
+			maxEpoches = 150'000;
 			minError = 0.00001;
 			minErrorChange = 0.000'000'000'001;
 			errorFunction = new HalfSquaredEuclidianDistance<float>();
@@ -49,8 +49,11 @@ namespace neuralNet {
 		void setMinErrorChange(float value) {
 			minErrorChange = value;
 		}
-		IErrorFunction<float>* ErrorFunction() {
+		IErrorFunction<float>* getErrorFunction() {
 			return errorFunction;
+		}
+		void setErrorFunction(IErrorFunction<float>* value) {
+			errorFunction = value;
 		}
 	};
 }

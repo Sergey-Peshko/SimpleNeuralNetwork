@@ -75,6 +75,8 @@ namespace neuralNet {
 
 				vector<float> prevOutput = startOutput;
 				vector<float> prevInput = startInput;
+				/*
+				//Not linear version
 				//выполняем k итераций
 				for (int i = 0; i < _config.getK(); i++) {
 					finishInput = network->calculateInput(prevOutput);
@@ -90,17 +92,15 @@ namespace neuralNet {
 								+
 								(finishInput[weightIndex] - prevInput[weightIndex]) *
 								(prevOutput[neuronIndex]) *
-								//network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
-								//	network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
 								network->getInvertedLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
 									network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
 						}
-						nablaThresholdsOutput[neuronIndex] -= (finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
+						nablaThresholdsOutput[neuronIndex] += (finishOutput[neuronIndex] - prevOutput[neuronIndex]) *
 							network->OutputLayer()->Neurons()[neuronIndex]->ActivationFunction()->calculateFirstDerivative(
 								network->OutputLayer()->Neurons()[neuronIndex]->getLastSum());
 					}
 					for (int weightIndex = 0; weightIndex < nablaThresholdsInput.size(); weightIndex++) {
-						nablaThresholdsInput[weightIndex] -=
+						nablaThresholdsInput[weightIndex] +=
 							(finishInput[weightIndex] - prevInput[weightIndex]) *
 							network->getInvertedLayer()->Neurons()[weightIndex]->ActivationFunction()->calculateFirstDerivative(
 								network->getInvertedLayer()->Neurons()[weightIndex]->getLastSum());
@@ -109,7 +109,36 @@ namespace neuralNet {
 					prevOutput = finishOutput;
 					prevInput = finishInput;
 				}
+				*/
 				
+				//Linear Version
+				
+				//выполняем k итераций
+				for (int i = 0; i < _config.getK(); i++) {
+					finishInput = network->calculateInput(prevOutput);
+					finishOutput = network->calculateOutput(finishInput);
+
+					prevOutput = finishOutput;
+					prevInput = finishInput;
+				}
+				//прибавляем к наблам
+				for (int neuronIndex = 0; neuronIndex < nablaWeights.size(); neuronIndex++) {
+					for (int weightIndex = 0; weightIndex < nablaWeights[neuronIndex].size(); weightIndex++) {
+						nablaWeights[neuronIndex][weightIndex] =
+							(finishOutput[neuronIndex]) *
+							(finishInput[weightIndex])
+							-
+							(startInput[weightIndex]) *
+							(startOutput[neuronIndex]);
+					}
+					nablaThresholdsOutput[neuronIndex] = (finishOutput[neuronIndex] - startOutput[neuronIndex]);
+				}
+				for (int weightIndex = 0; weightIndex < nablaThresholdsInput.size(); weightIndex++) {
+					nablaThresholdsInput[weightIndex] =
+						(finishInput[weightIndex] - startInput[weightIndex]);
+				}
+				
+
 				//меняем синоптические связи
 				for (int i = 0; i < nablaWeights.size(); i++)
 				{
@@ -117,10 +146,10 @@ namespace neuralNet {
 					{
 						network->OutputLayer()->Neurons()[i]->Weights()[j] -= _config.getLearningRate() * nablaWeights[i][j];
 					}
-					network->OutputLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsOutput[i];
+					network->OutputLayer()->Neurons()[i]->Threshold() += _config.getLearningRate() * nablaThresholdsOutput[i];
 				}
 				for (int i = 0; i < nablaThresholdsInput.size(); i++) {
-					network->getInvertedLayer()->Neurons()[i]->Threshold() -= _config.getLearningRate() * nablaThresholdsInput[i];
+					network->getInvertedLayer()->Neurons()[i]->Threshold() += _config.getLearningRate() * nablaThresholdsInput[i];
 				}
 
 
@@ -144,8 +173,8 @@ namespace neuralNet {
 					finishInput = network->calculateInput(prevOutput);
 					finishOutput = network->calculateOutput(finishInput);
 
-					currentError += _config.ErrorFunction()->calculate(finishInput, prevInput);
-					currentError += _config.ErrorFunction()->calculate(finishOutput, prevOutput);
+					currentError += _config.getErrorFunction()->calculate(finishInput, prevInput);
+					currentError += _config.getErrorFunction()->calculate(finishOutput, prevOutput);
 
 					prevOutput = finishOutput;
 					prevInput = finishInput;
