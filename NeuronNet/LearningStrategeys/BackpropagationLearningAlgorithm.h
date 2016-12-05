@@ -11,6 +11,7 @@ namespace neuralNet {
 	private:
 		BackpropagationLearningAlgorithmConfig _config;
 		std::ofstream _logger;
+		int _id;
 
 		void shuffle(vector<int>& arr);
 	public:
@@ -22,8 +23,8 @@ namespace neuralNet {
 	};
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm() {
 		std::ostringstream ss;
-		time_t seconds = time(NULL); // получить текущую дату, выраженную в секундах
-		ss << "logsBPA(data" << (int)seconds << ").log";
+		_id = (int)time(NULL); // получить текущую дату, выраженную в секундах
+		ss << "logsBPA(" << _id << ").log";
 		_logger = std::ofstream(ss.str());
 	}
 	BackpropagationLearningAlgorithm::BackpropagationLearningAlgorithm(BackpropagationLearningAlgorithmConfig config) :
@@ -280,6 +281,8 @@ namespace neuralNet {
 
 				currentIndex += _config.getBatchSize();
 
+				//cout << "Eposh: " << epochNumber << " images procesed: " << currentIndex << endl;
+
 			} while (currentIndex < data.size());
 
 			//recalculating error on all data
@@ -349,6 +352,9 @@ namespace neuralNet {
 			_logger << "TestSet error: " << currentTestSetError << endl;
 			//cout << "Test error: " << (float)count / (float)test.size() << endl;
 			
+			ostringstream os;
+			os << "network(" << _id << ")eposh(" << epochNumber << ").log";
+			network->save(os.str());
 
 		} while (epochNumber < _config.getMaxEpoches() &&
 			currentError > _config.getMinError() &&

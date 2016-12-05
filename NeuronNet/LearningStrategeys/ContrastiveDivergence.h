@@ -75,7 +75,7 @@ namespace neuralNet {
 
 				vector<float> prevOutput = startOutput;
 				vector<float> prevInput = startInput;
-				/*
+				
 				//Not linear version
 				//выполняем k итераций
 				for (int i = 0; i < _config.getK(); i++) {
@@ -109,8 +109,9 @@ namespace neuralNet {
 					prevOutput = finishOutput;
 					prevInput = finishInput;
 				}
-				*/
 				
+				
+				/*
 				//Linear Version
 				
 				//выполняем k итераций
@@ -137,7 +138,7 @@ namespace neuralNet {
 					nablaThresholdsInput[weightIndex] =
 						(finishInput[weightIndex] - startInput[weightIndex]);
 				}
-				
+				*/
 
 				//меняем синоптические связи
 				for (int i = 0; i < nablaWeights.size(); i++)
@@ -154,10 +155,11 @@ namespace neuralNet {
 
 
 				currentIndex++;
+
+				//cout << "eposh: " << epochNumber << " index trained:" << currentIndex << endl;
 			} while (currentIndex < data.size());
 			
 			//вычисляем среднеквадратичную ошибку
-			//выполняем k итераций
 			for (int i = 0; i < data.size(); i++)
 			{
 				vector<float> startInput = data[i].Input();
@@ -169,6 +171,7 @@ namespace neuralNet {
 				vector<float> prevOutput = startOutput;
 				vector<float> prevInput = startInput;
 
+				//выполняем k итераций
 				for (int i = 0; i < _config.getK(); i++) {
 					finishInput = network->calculateInput(prevOutput);
 					finishOutput = network->calculateOutput(finishInput);

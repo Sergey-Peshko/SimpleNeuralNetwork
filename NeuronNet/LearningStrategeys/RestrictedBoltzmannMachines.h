@@ -11,6 +11,18 @@ namespace neuralNet {
 	private:
 		ContrastiveDivergenceAlgorithmConfig _config;
 		std::ofstream _logger;
+
+
+		void cloneSynaptics(ILayer* from, ILayer* to) {
+			if (from->Neurons().size() != to->Neurons().size())
+				throw 2;
+			for (int i = 0; i < from->Neurons().size(); i++) {
+				for (int j = 0; j < from->Neurons()[i]->Weights().size(); j++) {
+					to->Neurons()[i]->Weights()[j] = from->Neurons()[i]->Weights()[j];
+				}
+				to->Neurons()[i]->Threshold() = from->Neurons()[i]->Threshold();
+			}
+		}
 	public:
 		RestrictedBoltzmannMachines();
 		RestrictedBoltzmannMachines(ContrastiveDivergenceAlgorithmConfig _config);
@@ -38,15 +50,27 @@ namespace neuralNet {
 			ss << i;
 			OLRNN tmp(network->HiddenLayers()[i], new ContrastiveDivergence(_config, ss.str()));
 			
-			for (int j = 0; j < i; j++) {
-				for (int k = 0; k < data.size(); k++) {
-					tmpData[k].Input() = network->HiddenLayers()[j]->calculate(tmpData[k].Input());
-				}
-			}
+			//OLRNN tmp(network->HiddenLayers()[i]->getInputDimension(), 
+			//	network->HiddenLayers()[i]->Neurons().size(), new Linear(),
+			//	new ContrastiveDivergence(_config, ss.str()));
+
+
+			//for (int j = 0; j < i; j++) {
+			//	for (int k = 0; k < data.size(); k++) {
+			//		tmpData[k].Input() = network->HiddenLayers()[j]->calculate(tmpData[k].Input());
+			//	}
+			//}
 
 			tmp.train(tmpData);
+
+			for (int k = 0; k < data.size(); k++) {
+				tmpData[k].Input() = network->HiddenLayers()[i]->calculate(tmpData[k].Input());
+			}
+
 			_logger << "hidden layer #" << i << 
 				" finish pre-train; it takes " << clock() - dtStart << std::endl;
+
+			//cloneSynaptics(tmp.OutputLayer(), network->HiddenLayers()[i]);
 		}
 	}
 }

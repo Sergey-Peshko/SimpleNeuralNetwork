@@ -49,7 +49,7 @@ int main()
 
 	vector<DataItem<float>> data;
 	
-	
+	/*
 	DataItem<float> tmp;
 
 	tmp.Input() = { 0,0 };
@@ -64,6 +64,7 @@ int main()
 	tmp.Input() = { 1,1 };
 	tmp.Output() = { 0 };
 	data.push_back(tmp);
+	*/
 	/*
 	OLRNN rnn(2, 2, new Relu(), new ContrastiveDivergence());
 	rnn.train(data);
@@ -71,7 +72,7 @@ int main()
 	for (int i = 0; i < data.size(); i++)
 		print(rnn.calculateInput(rnn.calculateOutput(data[i].Input())));
 		*/
-	
+	/*
 	BackpropagationLearningAlgorithmConfig bpaXOR;
 	bpaXOR.setBatchSize(1);
 	bpaXOR.setLearningRate(0.1);
@@ -96,7 +97,8 @@ int main()
 		new BackpropagationLearningAlgorithm(bpaXOR)
 		, new RestrictedBoltzmannMachines(cdXOR)
 	);
-	//mlp.save("tmp.txt");
+	mlp.save("tmp.txt");
+	
 	mlp.open("tmp.txt");
 	
 	mlp.preTrain(data);
@@ -108,19 +110,21 @@ int main()
 	print(mlp.calculateOutput({ 1,1 }));
 
 	cout << endl;
-
+	system("pause");
 	mlp.open("tmp.txt");
-	//mlp.setLearningStrategy(new BackpropagationLearningAlgorithm(bpaXOR));
+	
+	mlp.setLearningStrategy(new BackpropagationLearningAlgorithm(bpaXOR));
+	
 	mlp.train(data);
 
 	print(mlp.calculateOutput({ 0,0 }));
 	print(mlp.calculateOutput({ 0,1 }));
 	print(mlp.calculateOutput({ 1,0 }));
 	print(mlp.calculateOutput({ 1,1 }));
+	*/
 	
-	/*
-	//MNISTReader rd;
-	//data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
+	MNISTReader rd;
+	data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
 
 	BackpropagationLearningAlgorithmConfig bpaMNIST;
 	bpaMNIST.setBatchSize(1);
@@ -138,12 +142,23 @@ int main()
 	ContrastiveDivergenceAlgorithmConfig cdMNIST;
 	cdMNIST.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
 	cdMNIST.setK(1);
-	cdMNIST.setLearningRate(0.001);
+	cdMNIST.setLearningRate(0.1);
 	cdMNIST.setMaxEpoches(50);
 	cdMNIST.setMinError(0.000'01);
 	cdMNIST.setMinErrorChange(0.000'000'000'001);
-	*/
 	
+	MLP mlp(784, { 392, 196, 98, 49, 25 }, 10, new Relu(), new Sigmoid(),
+		new BackpropagationLearningAlgorithm(bpaMNIST)
+		, new RestrictedBoltzmannMachines(cdMNIST)
+	);
+	mlp.save("source.txt");
+	
+	mlp.open("source.txt");
+
+	mlp.preTrain(vector<DataItem<float>>(data.begin(), data.begin() + 600));
+	mlp.save("rezultpretrain.txt");
+	mlp.train(data);
+	mlp.save("rezult.txt");
 
     return 0;
 }
