@@ -48,8 +48,8 @@ int main()
 	vector<DataItem<float>> data;
 	vector<DataItem<float>> test;
 	XORReader rd;
-	data = rd.LoadData("data.txt", 12372);
-	test = rd.LoadData("test.txt", 5000);
+	data = rd.LoadData("data.xor", 12372);
+	test = rd.LoadData("test.xor", 5000);
 	BackpropagationLearningAlgorithmConfig bpaXOR;
 	bpaXOR.setBatchSize(1);
 	bpaXOR.setLearningRate(0.1);
