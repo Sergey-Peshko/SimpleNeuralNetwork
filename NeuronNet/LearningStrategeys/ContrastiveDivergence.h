@@ -2,6 +2,7 @@
 #include "ILearningStrategey.h"
 #include "..\NeuralNetworks\RecurentNeuralNetwork\IRecurentNeuralNetwork.h"
 #include "Configs\ContrastiveDivergenceAlgorithmConfig.h"
+#include <concurrent_priority_queue.h>
 namespace neuralNet {
 	class ContrastiveDivergence : public ILearningStrategy<IRecurentNeuralNetwork> {
 		ContrastiveDivergenceAlgorithmConfig _config;
@@ -11,6 +12,7 @@ namespace neuralNet {
 		ContrastiveDivergence();
 		ContrastiveDivergence(std::string name);
 		ContrastiveDivergence(ContrastiveDivergenceAlgorithmConfig config, std::string name);
+
 		// Унаследовано через ILearningStrategy
 		virtual void train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data) override;
 	};
@@ -33,10 +35,12 @@ namespace neuralNet {
 		ss << "logsCD(" << "name" << name << " data" << (int)seconds << ").log";
 		_logger = std::ofstream(ss.str());
 	}
+
 	void ContrastiveDivergence::train(IRecurentNeuralNetwork * network, vector<DataItem<float>>& data)
 	{
 
 		float currentError = FLT_MAX;
+		vector<float> errors(5);
 		float lastError = 0;
 		int epochNumber = 0;
 		_logger << ("CD-k Start learning...") << std::endl;

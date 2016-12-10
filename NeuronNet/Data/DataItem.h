@@ -41,6 +41,17 @@ namespace neuralNet {
 			}
 			this->_output[(int)label] = 1.;
 		}
-		
+		DataItem(string input, int output)
+		{
+			this->_input.resize(input.size());
+			for (int i = 0; i < input.size(); i++) {
+				if(input[i]=='1')
+					this->_input[i] = 1.;
+				else
+					this->_input[i] = 0.;
+			}
+			this->_output.resize(1);
+			this->_output[0] = (float)output;
+		}
 	};
 }

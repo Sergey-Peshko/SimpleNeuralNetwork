@@ -144,6 +144,9 @@
     <ClInclude Include="OutputInterpretators\XORInterpretatorLogic.h">
       <Filter>Заголовочные файлы\OutputInterpretators</Filter>
     </ClInclude>
+    <ClInclude Include="Data\XORReader.h">
+      <Filter>Заголовочные файлы\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
