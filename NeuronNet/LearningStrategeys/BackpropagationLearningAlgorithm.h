@@ -352,9 +352,9 @@ namespace neuralNet {
 			_logger << "TestSet error: " << currentTestSetError << endl;
 			//cout << "Test error: " << (float)count / (float)test.size() << endl;
 			
-			ostringstream os;
-			os << "network(" << _id << ")eposh(" << epochNumber << ").log";
-			network->save(os.str());
+			//ostringstream os;
+			//os << "network(" << _id << ")eposh(" << epochNumber << ").log";
+			//network->save(os.str());
 
 		} while (epochNumber < _config.getMaxEpoches() &&
 			currentError > _config.getMinError() &&

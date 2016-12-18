@@ -30,7 +30,9 @@ namespace neuralNet {
 	{
 		std::mt19937 generator((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
 		float board = 1. / sqrtf(neuronsSize);
-		std::uniform_real_distribution<float> urd(-board, std::nextafter(board, FLT_MAX));
+		//std::uniform_real_distribution<float> urd(-board, std::nextafter(board, FLT_MAX));
+		std::uniform_real_distribution<float> urd(0, std::nextafter(board, FLT_MAX));
+		//std::uniform_real_distribution<float> urd(0.4, 0.6);
 
 		for (size_t i = 0; i < neuronsSize; i++) {
 			neurons[i] = new Neuron(inputDimension, generator, urd, activationFunction);

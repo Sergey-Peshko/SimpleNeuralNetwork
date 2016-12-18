@@ -48,12 +48,12 @@ int main()
 	vector<DataItem<float>> data;
 	vector<DataItem<float>> test;
 	XORReader rd;
-	data = rd.LoadData("data.xor", 12372);
+	data = rd.LoadData("data.xor", 30000);
 	test = rd.LoadData("test.xor", 5000);
 	BackpropagationLearningAlgorithmConfig bpaXOR;
 	bpaXOR.setBatchSize(1);
-	bpaXOR.setLearningRate(0.1);
-	bpaXOR.setMaxEpoches(50);
+	bpaXOR.setLearningRate(0.01);
+	bpaXOR.setMaxEpoches(150000);
 	bpaXOR.setMinError(0.000'01);
 	bpaXOR.setMinErrorChange(0.000'000'000'001);
 	bpaXOR.setRegulaizationFactor(0.);
@@ -65,36 +65,36 @@ int main()
 	ContrastiveDivergenceAlgorithmConfig cdXOR;
 	cdXOR.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
 	cdXOR.setK(1);
-	cdXOR.setLearningRate(0.1);
-	cdXOR.setMaxEpoches(50);
+	cdXOR.setLearningRate(0.001);
+	cdXOR.setMaxEpoches(100);
 	cdXOR.setMinError(0.000'01);
 	cdXOR.setMinErrorChange(0.000'000'000'001);
 
-	MLP mlp(32, { 96, 64, 32, 21, 15, 7, 2 }, 1, new Relu(), new Sigmoid(),
-		new BackpropagationLearningAlgorithm(bpaXOR)
-		, new RestrictedBoltzmannMachines(cdXOR)
+	MLP mlp(32, { 100 }, 1, new Sigmoid(), new Sigmoid(),
+	new BackpropagationLearningAlgorithm(bpaXOR)
+	, new RestrictedBoltzmannMachines(cdXOR)
 	);
-	mlp.save("tmp.txt");
+	mlp.save("source.txt");
 
-	mlp.open("tmp.txt");
+	mlp.open("source.txt");
 
 	mlp.preTrain(data);
 	mlp.train(data);
 
 	cout << endl;
 	//system("pause");
-	mlp.open("tmp.txt");
+		mlp.open("source.txt");
 
-	mlp.setLearningStrategy(new BackpropagationLearningAlgorithm(bpaXOR));
+		mlp.setLearningStrategy(new BackpropagationLearningAlgorithm(bpaXOR));
 
-	mlp.train(data);
+		mlp.train(data);
 	
-
     return 0;
 }
 
 
 /*
+vector<DataItem<float>> data;
 DataItem<float> tmp;
 
 tmp.Input() = { 0,0 };
@@ -167,6 +167,7 @@ print(mlp.calculateOutput({ 0,1 }));
 print(mlp.calculateOutput({ 1,0 }));
 print(mlp.calculateOutput({ 1,1 }));
 */
+
 /*
 MNISTReader rd;
 data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
@@ -204,4 +205,99 @@ mlp.preTrain(vector<DataItem<float>>(data.begin(), data.begin() + 600));
 mlp.save("rezultpretrain.txt");
 mlp.train(data);
 mlp.save("rezult.txt");
+*/
+
+//XOR
+/*
+
+*/
+
+/*
+MNISTReader rd;
+vector<DataItem<float>> data = rd.LoadData("train-images.idx3-ubyte", "train-labels.idx1-ubyte");
+BackpropagationLearningAlgorithmConfig bpaMNIST;
+bpaMNIST.setBatchSize(1);
+bpaMNIST.setLearningRate(0.1);
+bpaMNIST.setMaxEpoches(20);
+bpaMNIST.setMinError(0.000'01);
+bpaMNIST.setMinErrorChange(0.000'000'000'001);
+bpaMNIST.setRegulaizationFactor(0.0);
+bpaMNIST.setTestSetError(0.001);
+vector<DataItem<float>> test = rd.LoadData("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10'000);
+bpaMNIST.setTestSet(test);
+bpaMNIST.setOutputInterpretatorLogic(new MNISTInterpretatorLogic());
+bpaMNIST.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+
+ContrastiveDivergenceAlgorithmConfig cdMNIST;
+cdMNIST.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+cdMNIST.setK(1);
+cdMNIST.setLearningRate(0.01);
+cdMNIST.setMaxEpoches(50);
+cdMNIST.setMinError(0.000'01);
+cdMNIST.setMinErrorChange(0.000'000'000'001);
+
+MLP mlp(784, { 10 }, 10, new Relu(), new Sigmoid(),
+new BackpropagationLearningAlgorithm(bpaMNIST)
+, new RestrictedBoltzmannMachines(cdMNIST)
+);
+mlp.save("source.txt");
+
+mlp.open("source.txt");
+
+mlp.preTrain(vector<DataItem<float>>(data.begin(), data.begin() + 6000));
+mlp.save("rezultpretrain.txt");
+mlp.train(data);
+mlp.save("rezult.txt");
+
+cout << endl;
+//system("pause");
+mlp.open("source.txt");
+mlp.setLearningStrategy(new BackpropagationLearningAlgorithm(bpaMNIST));
+mlp.train(data);
+*/
+
+/*
+vector<DataItem<float>> data;
+vector<DataItem<float>> test;
+XORReader rd;
+data = rd.LoadData("data.xor", 30000);
+test = rd.LoadData("test.xor", 5000);
+BackpropagationLearningAlgorithmConfig bpaXOR;
+bpaXOR.setBatchSize(1);
+bpaXOR.setLearningRate(0.25);
+bpaXOR.setMaxEpoches(150000);
+bpaXOR.setMinError(0.000'01);
+bpaXOR.setMinErrorChange(0.000'000'000'001);
+bpaXOR.setRegulaizationFactor(0.);
+bpaXOR.setTestSetError(0.0);
+bpaXOR.setTestSet(test);
+bpaXOR.setOutputInterpretatorLogic(new XORInterpretatorLogic());
+bpaXOR.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+
+ContrastiveDivergenceAlgorithmConfig cdXOR;
+cdXOR.setErrorFunction(new HalfSquaredEuclidianDistance<float>());
+cdXOR.setK(1);
+cdXOR.setLearningRate(0.01);
+cdXOR.setMaxEpoches(100);
+cdXOR.setMinError(0.000'01);
+cdXOR.setMinErrorChange(0.000'000'000'001);
+
+MLP mlp(32, { 16 }, 1, new Sigmoid(), new Sigmoid(),
+new BackpropagationLearningAlgorithm(bpaXOR)
+//, new RestrictedBoltzmannMachines(cdXOR)
+);
+mlp.save("source.txt");
+
+mlp.open("source.txt");
+
+//	mlp.preTrain(data);
+mlp.train(data);
+
+cout << endl;
+//system("pause");
+//	mlp.open("source.txt");
+
+//	mlp.setLearningStrategy(new BackpropagationLearningAlgorithm(bpaXOR));
+
+//	mlp.train(data);
 */
